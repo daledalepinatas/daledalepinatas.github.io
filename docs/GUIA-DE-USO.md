@@ -33,7 +33,7 @@ Cada producto tiene un **código** que nunca cambia:
 
 ### Entrar
 
-1. Abre la tienda y al final de la página toca **“Acceso administrador”** (o ve a `…/diversion/#/admin`).
+1. Abre la tienda y al final de la página toca **“Acceso administrador”** (o ve a `daledalepinatas.github.io/#/admin`).
 2. Escribe tu correo y contraseña de administrador.
 3. Verás el botón **⚙️ Admin** en el menú mientras tengas la sesión abierta.
 4. Al terminar, toca **Cerrar sesión** (sobre todo en computadoras compartidas).
@@ -125,7 +125,7 @@ Cuando un cliente toca **Pedir por WhatsApp** te llega algo así:
 🪅 Piñata Estrella 7 picos
 🔖 Código: PIN-0001
 💲 Precio: $350.00 MXN
-🔗 https://x37737pixel.github.io/diversion/#/p/PIN-0001
+🔗 https://daledalepinatas.github.io/#/p/PIN-0001
 
 ¿Está disponible?
 ```

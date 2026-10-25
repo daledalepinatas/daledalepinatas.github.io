@@ -27,7 +27,7 @@ Sin credenciales de Supabase la web arranca en **modo demostración** (datos en 
 ```bash
 npm install
 cp .env.example .env   # opcional: llena tus datos de Supabase
-npm run dev            # http://localhost:5173/diversion/
+npm run dev            # http://localhost:5173/
 ```
 
 ## Configurar Supabase (una sola vez)
@@ -49,7 +49,7 @@ npm run dev            # http://localhost:5173/diversion/
 1. En GitHub: **Settings → Pages → Source: GitHub Actions**.
 2. **Settings → Secrets and variables → Actions → New repository secret**:
    `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`.
-3. Cada `push` a `main` publica en `https://x37737pixel.github.io/diversion/`.
+3. Cada `push` a `main` publica en `https://daledalepinatas.github.io/`.
 
 > La clave *anon* es pública por diseño (viaja en el navegador); la seguridad la dan las políticas RLS.
 > **Nunca** uses ni subas la clave `service_role`.
