@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom'
 import { useTienda } from '../context/Tienda'
 import { MODO_DEMO } from '../lib/api'
 import { NEGOCIO } from '../lib/config'
+import { URL_LOGO } from './Insignia'
 
 export default function Encabezado() {
   const { ajustes, pedido, usuario, seccionesActivas, personalizadaVisible } = useTienda()
@@ -21,10 +22,10 @@ export default function Encabezado() {
       <div className="papel-picado" aria-hidden="true" />
       <div className="barra contenedor">
         <Link to="/" className="logo" onClick={cerrar}>
-          <span className="logo-icono" aria-hidden="true">🪅</span>
+          <img className="logo-icono" src={URL_LOGO} alt="" />
           <span>
-            <strong>{NEGOCIO.nombre}</strong>
-            <small>{NEGOCIO.subtitulo}</small>
+            <strong>{NEGOCIO.frase}</strong>
+            <small>{NEGOCIO.fraseSecundaria}</small>
           </span>
         </Link>
         <button

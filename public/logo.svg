@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="28 -4 214 238" role="img" aria-label="Niño con los ojos vendados golpeando una piñata de estrella">
+  <!-- Piñata de estrella colgando -->
+  <line x1="172" y1="-4" x2="172" y2="34" stroke="#7a5230" stroke-width="3"/>
+  <g transform="translate(172,70) rotate(12)">
+    <polygon points="0,-44 9,-12 -9,-12" fill="#ffc400"/>
+    <polygon points="0,-44 9,-12 -9,-12" fill="#00b3a4" transform="rotate(51.4)"/>
+    <polygon points="0,-44 9,-12 -9,-12" fill="#6c2bd9" transform="rotate(102.8)"/>
+    <polygon points="0,-44 9,-12 -9,-12" fill="#ff7a00" transform="rotate(154.3)"/>
+    <polygon points="0,-44 9,-12 -9,-12" fill="#00a2ff" transform="rotate(205.7)"/>
+    <polygon points="0,-44 9,-12 -9,-12" fill="#ff4f9a" transform="rotate(257.1)"/>
+    <polygon points="0,-44 9,-12 -9,-12" fill="#7ed321" transform="rotate(308.6)"/>
+    <circle r="17" fill="#e6007e"/>
+    <circle cx="-5" cy="-6" r="5" fill="#ffffff" opacity="0.5"/>
+  </g>
+  <!-- Movimiento y dulces -->
+  <path d="M214 52 q10 14 0 30" fill="none" stroke="#6c2bd9" stroke-width="3" stroke-linecap="round"/>
+  <path d="M224 46 q14 20 0 42" fill="none" stroke="#6c2bd9" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="150" cy="124" r="5" fill="#ffc400"/>
+  <circle cx="194" cy="132" r="5" fill="#00b3a4"/>
+  <circle cx="176" cy="150" r="4" fill="#ff4f9a"/>
+  <g transform="translate(206,164) rotate(-30)"><ellipse rx="7" ry="4" fill="#ff7a00"/><polygon points="-7,0 -12,-4 -12,4" fill="#ff7a00"/><polygon points="7,0 12,-4 12,4" fill="#ff7a00"/></g>
+  <g transform="translate(160,182) rotate(20)"><ellipse rx="7" ry="4" fill="#6c2bd9"/><polygon points="-7,0 -12,-4 -12,4" fill="#6c2bd9"/><polygon points="7,0 12,-4 12,4" fill="#6c2bd9"/></g>
+  <!-- Niño -->
+  <ellipse cx="82" cy="230" rx="34" ry="4" fill="#2b1830" opacity="0.12"/>
+  <line x1="73" y1="196" x2="68" y2="222" stroke="#e8b48a" stroke-width="8" stroke-linecap="round"/>
+  <line x1="89" y1="196" x2="96" y2="222" stroke="#e8b48a" stroke-width="8" stroke-linecap="round"/>
+  <ellipse cx="66" cy="225" rx="9" ry="5" fill="#2b1830"/>
+  <ellipse cx="99" cy="225" rx="9" ry="5" fill="#2b1830"/>
+  <rect x="62" y="180" width="38" height="18" rx="5" fill="#6c2bd9"/>
+  <line x1="67" y1="152" x2="50" y2="176" stroke="#e8b48a" stroke-width="8" stroke-linecap="round"/>
+  <rect x="60" y="140" width="42" height="46" rx="12" fill="#00b3a4"/>
+  <rect x="60" y="160" width="42" height="7" fill="#ffc400"/>
+  <line x1="134" y1="62" x2="112" y2="118" stroke="#a0703f" stroke-width="7" stroke-linecap="round"/>
+  <line x1="94" y1="148" x2="114" y2="114" stroke="#e8b48a" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="115" cy="113" r="6" fill="#e8b48a"/>
+  <circle cx="80" cy="120" r="21" fill="#e8b48a"/>
+  <path d="M59 118 q2 -24 23 -23 q20 1 20 21 q-10 -9 -22 -8 q-12 0 -21 10z" fill="#3b2314"/>
+  <rect x="58" y="112" width="45" height="9" rx="3" fill="#d92d2d"/>
+  <polygon points="58,114 44,108 47,118" fill="#d92d2d"/>
+  <polygon points="58,118 46,124 50,128" fill="#d92d2d"/>
+  <path d="M74 131 q6 5 12 0" fill="none" stroke="#7a3b1f" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="98" cy="126" r="3" fill="#ff8fa3" opacity="0.7"/>
+</svg>

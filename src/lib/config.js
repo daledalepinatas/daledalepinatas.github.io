@@ -2,6 +2,8 @@
 export const NEGOCIO = {
   nombre: '¡Dale Dale!',
   nombreCorto: 'Dale Dale',
+  frase: '¡Dale, dale, dale!',
+  fraseSecundaria: 'no pierdas el tino',
   subtitulo: 'Piñatería & Dulcería',
   lema: 'Piñatas hechas a mano y dulces para rellenarlas. Elige, pide por WhatsApp y ¡a romperla!',
 }

@@ -17,9 +17,9 @@ export default function Inicio() {
           <div>
             <p className="etiqueta">{NEGOCIO.subtitulo}</p>
             <h1>
-              ¡Dale, dale, dale!
+              Piñatas y dulces
               <br />
-              <span>no pierdas el tino</span>
+              <span>para tu fiesta</span>
             </h1>
             <p className="heroe-texto">{NEGOCIO.lema}</p>
             <div className="acciones">

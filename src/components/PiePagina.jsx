@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useTienda } from '../context/Tienda'
 import { NEGOCIO } from '../lib/config'
 import { urlWhatsApp } from '../lib/whatsapp'
+import Insignia from './Insignia'
 
 export default function PiePagina() {
   const { ajustes, seccionesActivas } = useTienda()
@@ -9,8 +10,8 @@ export default function PiePagina() {
     <footer className="pie">
       <div className="contenedor pie-grid">
         <div>
-          <p className="pie-marca">🪅 {NEGOCIO.nombre}</p>
-          <p>{NEGOCIO.lema}</p>
+          <Insignia tamano={110} />
+          <p className="pie-lema">{NEGOCIO.nombre} · {NEGOCIO.subtitulo}</p>
         </div>
         <div>
           {ajustes.horario && <p>🕑 {ajustes.horario}</p>}
