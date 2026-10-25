@@ -1,0 +1,28 @@
+# Supabase (plan gratis) pausa el proyecto tras ~7 días sin actividad.
+# Esta tarea hace una consulta de solo lectura cada 3 días para mantenerlo activo.
+# Nota: GitHub desactiva las tareas programadas si el repositorio pasa 60 días sin commits;
+# se reactiva desde la pestaña Actions.
+name: Mantener Supabase activo
+
+on:
+  schedule:
+    - cron: '0 15 */3 * *' # cada 3 días a las 15:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  consultar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Leer una sección (solo lectura)
+        env:
+          SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          codigo=$(curl -sS -o /dev/null -w '%{http_code}' \
+            "$SUPABASE_URL/rest/v1/secciones?select=id&limit=1" \
+            -H "apikey: $SUPABASE_KEY")
+          echo "Respuesta de Supabase: $codigo"
+          test "$codigo" = "200"

@@ -169,4 +169,7 @@ Son de Unsplash con licencia gratuita, pero no son tus productos. Reemplázalas 
 
 **¿Cuánto cuesta?**
 GitHub Pages y el plan gratuito de Supabase cuestan $0. Un proyecto gratuito de Supabase se
-pausa tras ~1 semana sin visitas; se reactiva desde el panel de Supabase.
+pausa tras ~1 semana sin actividad; para evitarlo, la tarea **“Mantener Supabase activo”** (pestaña
+*Actions* del repositorio) hace una consulta cada 3 días. Si GitHub te avisa por correo que la desactivó
+(pasa tras 60 días sin cambios en el repositorio), entra a *Actions* y tócala para reactivarla. Si aun así
+el proyecto se pausara, se reactiva desde el panel de Supabase con **Restore project**.
