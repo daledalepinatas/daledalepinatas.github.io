@@ -1,0 +1,30 @@
+# Dependencias y compilados
+node_modules/
+dist/
+.vite/
+
+# Variables de entorno y secretos (NUNCA subir)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Supabase local
+supabase/.temp/
+supabase/.branches/
+supabase/*.local.sql
+
+# Logs y sistema
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Claude Code (configuración local)
+.claude/
