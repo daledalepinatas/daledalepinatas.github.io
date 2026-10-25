@@ -6,10 +6,11 @@ export const NEGOCIO = {
   lema: 'Piñatas hechas a mano y dulces para rellenarlas. Elige, pide por WhatsApp y ¡a romperla!',
 }
 
-export const SECCIONES = {
-  pinatas: { id: 'pinatas', nombre: 'Piñatas', emoji: '🪅', prefijo: 'PIN', ruta: '/pinatas' },
-  dulceria: { id: 'dulceria', nombre: 'Dulcería', emoji: '🍬', prefijo: 'DUL', ruta: '/dulceria' },
-}
+// Direcciones fijas de la tienda: ninguna sección puede usarlas como id.
+export const RUTAS_RESERVADAS = ['p', 'pedido', 'personalizada', 'admin']
+
+// Personalizada vive dentro de esta sección (la de piñatas).
+export const SECCION_PERSONALIZADA = 'pinatas'
 
 export const ESTADOS = {
   disponible: 'Disponible',

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useTienda } from '../../context/Tienda'
 import { guardarProducto, subirImagen } from '../../lib/api'
-import { ESTADOS, SECCIONES } from '../../lib/config'
+import { ESTADOS } from '../../lib/config'
 import Imagen from '../../components/Imagen'
 
 const VACIO = { nombre: '', categoria_id: '', precio: '', medida: '', descripcion: '', imagen_url: '', estado: 'disponible', destacado: false }
@@ -17,7 +17,7 @@ export default function FormularioProducto() {
 
 function Formulario({ id }) {
   const navegar = useNavigate()
-  const { productos, categorias, recargar, notificar } = useTienda()
+  const { productos, categorias, secciones, recargar, notificar } = useTienda()
   const existente = productos.find((p) => p.id === id)
   const [form, setForm] = useState(() => (existente ? { ...VACIO, ...existente } : VACIO))
   const [guardando, setGuardando] = useState(false)
@@ -72,7 +72,7 @@ function Formulario({ id }) {
   return (
     <form className="tarjeta-form formulario-producto" onSubmit={enviar}>
       <h2>{existente ? `✏️ Editar ${existente.codigo}` : '➕ Nuevo producto'}</h2>
-      {!existente && <p className="texto-suave">El código (PIN-0000 o DUL-0000) se asigna solo al guardar y no cambia nunca.</p>}
+      {!existente && <p className="texto-suave">El código (ej. PIN-0000) se asigna solo al guardar, con las 3 letras de la sección, y no cambia nunca.</p>}
 
       <div className="form-columnas">
         <div>
@@ -84,8 +84,8 @@ function Formulario({ id }) {
             Categoría *
             <select required value={form.categoria_id} onChange={cambiar('categoria_id')}>
               <option value="">Elige una categoría…</option>
-              {Object.values(SECCIONES).map((s) => (
-                <optgroup key={s.id} label={`${s.emoji} ${s.nombre}`}>
+              {secciones.map((s) => (
+                <optgroup key={s.id} label={`${s.emoji} ${s.nombre}${s.activa ? '' : ' (oculta)'}`}>
                   {categorias
                     .filter((c) => c.seccion === s.id)
                     .map((c) => (

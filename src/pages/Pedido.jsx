@@ -20,8 +20,7 @@ export default function Pedido() {
         <h1>Tu pedido está vacío</h1>
         <p>Agrega piñatas y dulces y envíanos todo en un solo mensaje de WhatsApp.</p>
         <div className="acciones">
-          <Link to="/pinatas" className="btn btn-primario">Ver piñatas</Link>
-          <Link to="/dulceria" className="btn btn-claro">Ir a la dulcería</Link>
+          <Link to="/" className="btn btn-primario">Ver catálogo</Link>
         </div>
       </div>
     )

@@ -27,6 +27,12 @@ export const IMAGENES = {
   bolsitas: us('1765317269952-82ca1acdd2ca'),
 }
 
+// Secciones del menú. El id es la dirección (/pinatas) y el prefijo forma los códigos (PIN-0001).
+export const SECCIONES = [
+  { id: 'pinatas', nombre: 'Piñatas', emoji: '🪅', prefijo: 'PIN', imagen_url: IMAGENES.estrella7, orden: 1, activa: true, consecutivo: 15 },
+  { id: 'dulceria', nombre: 'Dulcería', emoji: '🍬', prefijo: 'DUL', imagen_url: IMAGENES.gomitas, orden: 2, activa: true, consecutivo: 6 },
+]
+
 export const CATEGORIAS = [
   // La sección "✨ Personalizada" no es una categoría: es un formulario fijo que siempre va primero.
   { id: 'c01', seccion: 'pinatas', slug: 'letras', nombre: 'Letras', emoji: '🔤', orden: 2, activa: true },
@@ -89,4 +95,5 @@ export const AJUSTES = {
   horario: 'Lunes a sábado de 10:00 a 19:00',
   ubicacion: 'Entregas a domicilio en tu ciudad',
   aviso: 'Piñatas personalizadas con 3 días de anticipación.',
+  personalizada_activa: true,
 }

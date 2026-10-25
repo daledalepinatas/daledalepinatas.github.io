@@ -15,11 +15,9 @@ const prods = PRODUCTOS.map(
     `  (${q(p.codigo)}, ${q(slugDe[p.categoria_id])}, ${q(p.nombre)}, ${p.precio}, ${q(p.medida)}, ${q(p.descripcion)}, ${q(p.imagen_url)}, ${q(p.estado)}, ${p.destacado})`,
 ).join(',\n')
 
-const maxDe = (pref) => Math.max(0, ...PRODUCTOS.filter((p) => p.codigo.startsWith(pref)).map((p) => +p.codigo.slice(4)))
-
 const sql = `-- =====================================================================
 --  DATOS DE PRUEBA genéricos (generado con: npm run seed:sql — no editar a mano)
---  Ejecútalo en Supabase > SQL Editor DESPUÉS de schema.sql. Opcional.
+--  Ejecútalo en Supabase > SQL Editor DESPUÉS de schema.sql (que ya crea las secciones Piñatas y Dulcería). Opcional.
 --  Fotos de Unsplash (licencia gratuita): https://unsplash.com/license
 -- =====================================================================
 
@@ -35,9 +33,10 @@ ${prods}
 join public.categorias c on c.slug = v.slug
 on conflict (codigo) do nothing;
 
--- Continúa la numeración después de los productos de prueba.
-select setval('public.consecutivo_pin', greatest(${maxDe('PIN')}, (select coalesce(max(substring(codigo from 5)::int), 0) from public.productos where codigo like 'PIN-%')));
-select setval('public.consecutivo_dul', greatest(${maxDe('DUL')}, (select coalesce(max(substring(codigo from 5)::int), 0) from public.productos where codigo like 'DUL-%')));
+-- Continúa la numeración de cada sección después de los productos de prueba.
+update public.secciones s set consecutivo = greatest(s.consecutivo, (
+  select coalesce(max(substring(p.codigo from 5)::int), 0) from public.productos p where p.codigo like s.prefijo || '-%'
+));
 
 -- Ajustes de ejemplo (el número de WhatsApp se configura desde el panel de administración).
 update public.ajustes set horario = ${q(AJUSTES.horario)}, ubicacion = ${q(AJUSTES.ubicacion)}, aviso = ${q(AJUSTES.aviso)}

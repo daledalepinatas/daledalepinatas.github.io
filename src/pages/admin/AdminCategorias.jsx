@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { useTienda } from '../../context/Tienda'
 import { eliminarCategoria, guardarCategoria } from '../../lib/api'
-import { SECCIONES } from '../../lib/config'
 
 export default function AdminCategorias() {
-  const { categorias, productos, recargar, notificar } = useTienda()
-  const [nueva, setNueva] = useState({ nombre: '', emoji: '', seccion: 'dulceria' })
+  const { categorias, productos, secciones, recargar, notificar } = useTienda()
+  const [nueva, setNueva] = useState({ nombre: '', emoji: '', seccion: '' })
   const [editando, setEditando] = useState(null)
 
   const ejecutar = async (accion, mensaje) => {
@@ -22,6 +21,7 @@ export default function AdminCategorias() {
 
   const crear = async (e) => {
     e.preventDefault()
+    if (!nueva.seccion) return notificar('Elige una sección.', 'error')
     const orden = Math.max(0, ...categorias.filter((c) => c.seccion === nueva.seccion).map((c) => c.orden)) + 1
     const ok = await ejecutar(() => guardarCategoria({ ...nueva, orden, activa: true }), `Categoría “${nueva.nombre}” creada`)
     if (ok) setNueva({ ...nueva, nombre: '', emoji: '' })
@@ -44,8 +44,9 @@ export default function AdminCategorias() {
         <div className="form-fila">
           <label>
             Sección
-            <select value={nueva.seccion} onChange={(e) => setNueva({ ...nueva, seccion: e.target.value })}>
-              {Object.values(SECCIONES).map((s) => <option key={s.id} value={s.id}>{s.emoji} {s.nombre}</option>)}
+            <select required value={nueva.seccion} onChange={(e) => setNueva({ ...nueva, seccion: e.target.value })}>
+              <option value="">Elige…</option>
+              {secciones.map((s) => <option key={s.id} value={s.id}>{s.emoji} {s.nombre}</option>)}
             </select>
           </label>
           <label className="campo-emoji">
@@ -66,11 +67,11 @@ export default function AdminCategorias() {
       </p>
 
       <div className="columnas-categorias">
-        {Object.values(SECCIONES).map((s) => {
+        {secciones.map((s) => {
           const lista = categorias.filter((c) => c.seccion === s.id).sort((a, b) => a.orden - b.orden)
           return (
             <div key={s.id}>
-              <h2>{s.emoji} {s.nombre}</h2>
+              <h2>{s.emoji} {s.nombre} {!s.activa && <small className="texto-suave">(sección oculta)</small>}</h2>
               <ul className="lista-categorias">
                 {lista.map((c, i) => {
                   const cuantos = productos.filter((p) => p.categoria_id === c.id).length

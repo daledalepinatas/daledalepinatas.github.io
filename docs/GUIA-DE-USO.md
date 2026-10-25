@@ -68,6 +68,21 @@ Cada producto tiene un **código** que nunca cambia:
 - Cambia el **estado** conforme avanza: Nueva → Cotizada → Aceptada → Entregada (o Cancelada).
 - **↻ Actualizar** trae las solicitudes más recientes.
 
+### Pestaña 🧭 Secciones
+
+Las **secciones** son los apartados del menú (🪅 Piñatas, 🍬 Dulcería…). Cada una tiene sus categorías y productos.
+
+- **✨ Aceptar pedidos de piñatas personalizadas:** apágalo cuando no puedas tomar pedidos especiales
+  (por ejemplo en temporada alta). Desaparece del menú y del catálogo; vuelve a encenderlo cuando quieras.
+- **Nueva sección:** escribe el nombre (ej. “Globos”), un emoji, una imagen (se ve en el inicio) y un
+  **código de 3 letras** (se sugiere solo: Globos → `GLO`). Sus productos se llamarán `GLO-0001`, `GLO-0002`…
+  ⚠️ El código no se puede cambiar después, para que los mensajes de WhatsApp sigan siendo válidos.
+- **Visible / Oculta:** oculta una sección completa (con sus categorías y productos) sin borrar nada.
+- **✏️** cambia nombre, emoji o imagen. **▲ ▼** cambian el orden en el menú.
+- **🗑️ Eliminar** solo se activa si la sección no tiene categorías.
+
+Después de crear una sección, ve a **🗂️ Categorías** para agregarle categorías y luego a **🪅 Productos**.
+
 ### Pestaña 🗂️ Categorías (y tipos de dulce)
 
 - **Agregar:** elige la sección (Piñatas o Dulcería), un emoji y el nombre → **Agregar**.

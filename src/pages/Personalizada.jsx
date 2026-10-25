@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTienda } from '../context/Tienda'
 import { crearPersonalizada } from '../lib/api'
-import { PERSONALIZADA, TAMANOS } from '../lib/config'
+import { PERSONALIZADA, SECCION_PERSONALIZADA, TAMANOS } from '../lib/config'
 import { mensajePersonalizada, urlWhatsApp } from '../lib/whatsapp'
 import ChipsSeccion from '../components/ChipsSeccion'
 
@@ -10,7 +10,7 @@ const VACIO = { diseno: '', tamano: '', fecha_evento: '', detalles: '' }
 const hoy = () => new Date().toISOString().slice(0, 10)
 
 export default function Personalizada() {
-  const { ajustes } = useTienda()
+  const { ajustes, cargando, personalizadaVisible } = useTienda()
   const [form, setForm] = useState(VACIO)
   const [foto, setFoto] = useState(null) // { archivo, url } — solo vista previa, no se sube
   const [enviada, setEnviada] = useState(null)
@@ -56,10 +56,21 @@ export default function Personalizada() {
 
   const puedeCompartirFoto = foto && navigator.canShare?.({ files: [foto.archivo] })
 
+  if (!cargando && !personalizadaVisible && !enviada) {
+    return (
+      <div className="contenedor seccion estado-vacio">
+        <p className="emoji-grande">✨</p>
+        <h1>Por ahora no estamos tomando pedidos personalizados</h1>
+        <p>Mira las piñatas que tenemos listas o escríbenos por WhatsApp.</p>
+        <Link to="/" className="btn btn-primario">Ver catálogo</Link>
+      </div>
+    )
+  }
+
   return (
     <div className="contenedor seccion">
       <h1 className="titulo-pagina">{PERSONALIZADA.emoji} Piñata personalizada</h1>
-      <ChipsSeccion seccion="pinatas" />
+      <ChipsSeccion seccion={SECCION_PERSONALIZADA} />
 
       {enviada ? (
         <div className="tarjeta-form personalizada-lista">
@@ -90,7 +101,7 @@ export default function Personalizada() {
             <button className="btn btn-claro" onClick={() => { setEnviada(null); setForm(VACIO); setFoto(null) }}>
               Pedir otra piñata personalizada
             </button>
-            <Link to="/pinatas" className="btn btn-claro">Ver catálogo</Link>
+            <Link to="/" className="btn btn-claro">Ver catálogo</Link>
           </div>
         </div>
       ) : (

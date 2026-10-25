@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import NoEncontrado from './NoEncontrado'
 import { useTienda } from '../context/Tienda'
-import { SECCIONES } from '../lib/config'
 import { normalizarBusqueda } from '../lib/formato'
 import TarjetaProducto from '../components/TarjetaProducto'
 import ChipsSeccion from '../components/ChipsSeccion'
@@ -14,12 +14,12 @@ const ORDENES = {
   nombre: { nombre: 'Nombre (A-Z)', fn: (a, b) => a.nombre.localeCompare(b.nombre) },
 }
 
-export default function Catalogo({ seccion }) {
-  const { slug } = useParams()
-  const { categoriasActivas, publicos } = useTienda()
+export default function Catalogo() {
+  const { seccion, slug } = useParams()
+  const { categoriasActivas, publicos, seccionPorId, cargando } = useTienda()
   const [busqueda, setBusqueda] = useState('')
   const [orden, setOrden] = useState('relevancia')
-  const sec = SECCIONES[seccion]
+  const sec = seccionPorId[seccion]
 
   const categorias = categoriasActivas.filter((c) => c.seccion === seccion)
   const actual = categorias.find((c) => c.slug === slug)
@@ -33,10 +33,12 @@ export default function Catalogo({ seccion }) {
       .sort(ORDENES[orden].fn)
   }, [publicos, seccion, actual, busqueda, orden])
 
+  if (!cargando && !sec?.activa) return <NoEncontrado mensaje="Esta sección no está disponible por ahora." />
+
   return (
     <div className="contenedor seccion">
       <h1 className="titulo-pagina">
-        {sec.emoji} {actual ? actual.nombre : sec.nombre}
+        {sec?.emoji} {actual ? actual.nombre : sec?.nombre}
       </h1>
       <Cargando>
         <ChipsSeccion seccion={seccion} actual={actual || null} />
@@ -57,7 +59,7 @@ export default function Catalogo({ seccion }) {
         {slug && !actual ? (
           <div className="estado-vacio">
             <p>Esta categoría ya no está disponible.</p>
-            <Link to={sec.ruta} className="btn btn-primario">Ver todo</Link>
+            <Link to={`/${seccion}`} className="btn btn-primario">Ver todo</Link>
           </div>
         ) : lista.length ? (
           <div className="rejilla">

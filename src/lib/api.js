@@ -1,7 +1,7 @@
 // Capa de datos. Si hay credenciales de Supabase en el .env usa la base de datos real;
 // si no, funciona en "modo demostración" guardando todo en el navegador (localStorage).
 import { createClient } from '@supabase/supabase-js'
-import { SECCIONES } from './config'
+import { RUTAS_RESERVADAS } from './config'
 import { slugify } from './formato'
 import { redimensionarImagen, blobADataUrl } from './imagen'
 import * as demo from './datosDemo'
@@ -20,7 +20,9 @@ function falla(error) {
 function traducirError(msg) {
   if (/Invalid login credentials/i.test(msg)) return 'Correo o contraseña incorrectos.'
   if (/row-level security|permission denied/i.test(msg)) return 'No tienes permiso para hacer esto. Inicia sesión como administrador.'
+  if (/categorias_seccion_fkey/i.test(msg)) return 'No se puede eliminar: todavía hay categorías en esta sección.'
   if (/violates foreign key/i.test(msg)) return 'No se puede eliminar: todavía hay productos en esta categoría.'
+  if (/secciones_prefijo_key/i.test(msg)) return 'Ese código de 3 letras ya lo usa otra sección.'
   if (/duplicate key/i.test(msg)) return 'Ya existe un registro con ese nombre.'
   if (/check constraint/i.test(msg)) return 'Revisa los datos: algún campo está vacío o es demasiado largo.'
   if (/Failed to fetch|NetworkError/i.test(msg)) return 'Sin conexión. Revisa tu internet e inténtalo de nuevo.'
@@ -28,19 +30,20 @@ function traducirError(msg) {
 }
 
 // ---------- Modo demostración (localStorage) ----------
-const CLAVE_DEMO = 'daledale-demo-v2'
+const CLAVE_DEMO = 'daledale-demo-v3'
 const CLAVE_SESION_DEMO = 'daledale-demo-sesion'
 
 function leerDemo() {
   try {
     const guardado = JSON.parse(localStorage.getItem(CLAVE_DEMO))
-    if (guardado?.categorias) return guardado
+    if (guardado?.secciones) return guardado
   } catch { /* sin almacenamiento disponible */ }
   return {
+    secciones: structuredClone(demo.SECCIONES),
     categorias: structuredClone(demo.CATEGORIAS),
     productos: structuredClone(demo.PRODUCTOS),
     ajustes: { ...demo.AJUSTES },
-    consecutivos: { PIN: 15, DUL: 6 },
+    consecutivos: {},
   }
 }
 
@@ -61,16 +64,18 @@ const nuevoId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now
 // ---------- Catálogo ----------
 export async function obtenerCatalogo() {
   if (MODO_DEMO) {
-    const { categorias, productos } = leerDemo()
-    return { categorias, productos }
+    const { secciones, categorias, productos } = leerDemo()
+    return { secciones, categorias, productos }
   }
-  const [cats, prods] = await Promise.all([
+  const [secs, cats, prods] = await Promise.all([
+    sb.from('secciones').select('*').order('orden'),
     sb.from('categorias').select('*').order('orden'),
     sb.from('productos').select('*').order('codigo'),
   ])
+  falla(secs.error)
   falla(cats.error)
   falla(prods.error)
-  return { categorias: cats.data, productos: prods.data }
+  return { secciones: secs.data, categorias: cats.data, productos: prods.data }
 }
 
 export async function guardarProducto(producto) {
@@ -90,15 +95,16 @@ export async function guardarProducto(producto) {
       estado.productos = estado.productos.map((p) => (p.id === producto.id ? { ...p, ...campos } : p))
     } else {
       const cat = estado.categorias.find((c) => c.id === campos.categoria_id)
-      const prefijo = SECCIONES[cat?.seccion]?.prefijo || 'PIN'
-      estado.consecutivos[prefijo] = (estado.consecutivos[prefijo] || 0) + 1
-      const codigo = `${prefijo}-${String(estado.consecutivos[prefijo]).padStart(4, '0')}`
+      const sec = estado.secciones.find((x) => x.id === cat?.seccion)
+      if (!sec) throw new Error('La categoría no pertenece a ninguna sección.')
+      sec.consecutivo += 1
+      const codigo = `${sec.prefijo}-${String(sec.consecutivo).padStart(4, '0')}`
       estado.productos.push({ id: nuevoId(), codigo, ...campos })
     }
     escribirDemo(estado)
     return
   }
-  // El código (PIN-0001 / DUL-0001) lo asigna la base de datos y no cambia nunca.
+  // El código (PIN-0001, DUL-0001…) lo asigna la base de datos con el prefijo de la sección y no cambia nunca.
   const res = producto.id
     ? await sb.from('productos').update(campos).eq('id', producto.id)
     : await sb.from('productos').insert(campos)
@@ -124,6 +130,56 @@ export async function eliminarProducto(producto) {
   }
   falla((await sb.from('productos').delete().eq('id', producto.id)).error)
   await borrarImagenPropia(producto.imagen_url)
+}
+
+// ---------- Secciones (Piñatas, Dulcería, …) ----------
+// El id (usado en la dirección, ej. /dulceria) y el prefijo de 3 letras no cambian después de crearla.
+export function idParaSeccion(nombre, existentes) {
+  const base = slugify(nombre) || 'seccion'
+  let id = RUTAS_RESERVADAS.includes(base) ? `${base}-1` : base
+  for (let n = 2; existentes.some((s) => s.id === id); n++) id = `${base}-${n}`
+  return id
+}
+
+export async function guardarSeccion(seccion, esNueva) {
+  const campos = {
+    nombre: seccion.nombre.trim(),
+    emoji: seccion.emoji?.trim() || '🎉',
+    imagen_url: seccion.imagen_url || '',
+    orden: Number(seccion.orden) || 0,
+    activa: seccion.activa !== false,
+  }
+  const prefijo = (seccion.prefijo || '').toUpperCase()
+  if (esNueva && !/^[A-Z]{3}$/.test(prefijo)) throw new Error('El código debe tener exactamente 3 letras (A-Z).')
+  if (esNueva && prefijo === 'PER') throw new Error('PER está reservado para las piñatas personalizadas.')
+  if (MODO_DEMO) {
+    const estado = leerDemo()
+    if (esNueva) {
+      if (estado.secciones.some((x) => x.prefijo === prefijo)) throw new Error('Ese código de 3 letras ya lo usa otra sección.')
+      estado.secciones.push({ id: seccion.id, prefijo, consecutivo: 0, ...campos })
+    } else {
+      estado.secciones = estado.secciones.map((x) => (x.id === seccion.id ? { ...x, ...campos } : x))
+    }
+    escribirDemo(estado)
+    return
+  }
+  const res = esNueva
+    ? await sb.from('secciones').insert({ id: seccion.id, prefijo, ...campos })
+    : await sb.from('secciones').update(campos).eq('id', seccion.id)
+  falla(res.error)
+}
+
+export async function eliminarSeccion(id) {
+  if (MODO_DEMO) {
+    const estado = leerDemo()
+    if (estado.categorias.some((c) => c.seccion === id)) {
+      throw new Error('No se puede eliminar: todavía hay categorías en esta sección.')
+    }
+    estado.secciones = estado.secciones.filter((x) => x.id !== id)
+    escribirDemo(estado)
+    return
+  }
+  falla((await sb.from('secciones').delete().eq('id', id)).error)
 }
 
 // ---------- Categorías (tipos de piñata / tipos de dulce) ----------
@@ -172,7 +228,7 @@ export async function obtenerAjustes() {
   if (MODO_DEMO) return leerDemo().ajustes
   const { data, error } = await sb.from('ajustes').select('*').eq('id', 1).maybeSingle()
   falla(error)
-  return data || { whatsapp: '', horario: '', ubicacion: '', aviso: '' }
+  return data || { whatsapp: '', horario: '', ubicacion: '', aviso: '', personalizada_activa: true }
 }
 
 export async function guardarAjustes(ajustes) {
@@ -181,6 +237,7 @@ export async function guardarAjustes(ajustes) {
     horario: ajustes.horario?.trim() || '',
     ubicacion: ajustes.ubicacion?.trim() || '',
     aviso: ajustes.aviso?.trim() || '',
+    personalizada_activa: ajustes.personalizada_activa !== false,
   }
   if (MODO_DEMO) {
     const estado = leerDemo()
@@ -204,7 +261,7 @@ export async function crearPersonalizada(solicitud) {
   if (MODO_DEMO) {
     const estado = leerDemo()
     estado.personalizadas ??= []
-    estado.consecutivos.PER = (estado.consecutivos.PER || 0) + 1
+    estado.consecutivos.PER = (estado.consecutivos.PER || 0) + 1 // folios propios, aparte de las secciones
     const folio = `PER-${String(estado.consecutivos.PER).padStart(4, '0')}`
     estado.personalizadas.unshift({ id: nuevoId(), folio, estado: 'nueva', created_at: new Date().toISOString(), ...datos })
     escribirDemo(estado)

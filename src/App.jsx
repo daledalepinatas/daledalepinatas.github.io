@@ -26,14 +26,13 @@ export default function App() {
       <main className="principal">
         <Routes>
           <Route path="/" element={<Inicio />} />
-          <Route path="/pinatas" element={<Catalogo seccion="pinatas" />} />
-          <Route path="/pinatas/:slug" element={<Catalogo seccion="pinatas" />} />
-          <Route path="/dulceria" element={<Catalogo seccion="dulceria" />} />
-          <Route path="/dulceria/:slug" element={<Catalogo seccion="dulceria" />} />
           <Route path="/p/:codigo" element={<Producto />} />
           <Route path="/personalizada" element={<Personalizada />} />
           <Route path="/pedido" element={<Pedido />} />
           <Route path="/admin/*" element={<Admin />} />
+          {/* Secciones creadas desde el panel: /pinatas, /dulceria, /globos… */}
+          <Route path="/:seccion" element={<Catalogo />} />
+          <Route path="/:seccion/:slug" element={<Catalogo />} />
           <Route path="*" element={<NoEncontrado />} />
         </Routes>
       </main>

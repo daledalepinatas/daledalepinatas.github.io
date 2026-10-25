@@ -1,6 +1,6 @@
 -- =====================================================================
 --  DATOS DE PRUEBA genéricos (generado con: npm run seed:sql — no editar a mano)
---  Ejecútalo en Supabase > SQL Editor DESPUÉS de schema.sql. Opcional.
+--  Ejecútalo en Supabase > SQL Editor DESPUÉS de schema.sql (que ya crea las secciones Piñatas y Dulcería). Opcional.
 --  Fotos de Unsplash (licencia gratuita): https://unsplash.com/license
 -- =====================================================================
 
@@ -49,9 +49,10 @@ from (values
 join public.categorias c on c.slug = v.slug
 on conflict (codigo) do nothing;
 
--- Continúa la numeración después de los productos de prueba.
-select setval('public.consecutivo_pin', greatest(15, (select coalesce(max(substring(codigo from 5)::int), 0) from public.productos where codigo like 'PIN-%')));
-select setval('public.consecutivo_dul', greatest(6, (select coalesce(max(substring(codigo from 5)::int), 0) from public.productos where codigo like 'DUL-%')));
+-- Continúa la numeración de cada sección después de los productos de prueba.
+update public.secciones s set consecutivo = greatest(s.consecutivo, (
+  select coalesce(max(substring(p.codigo from 5)::int), 0) from public.productos p where p.codigo like s.prefijo || '-%'
+));
 
 -- Ajustes de ejemplo (el número de WhatsApp se configura desde el panel de administración).
 update public.ajustes set horario = 'Lunes a sábado de 10:00 a 19:00', ubicacion = 'Entregas a domicilio en tu ciudad', aviso = 'Piñatas personalizadas con 3 días de anticipación.'

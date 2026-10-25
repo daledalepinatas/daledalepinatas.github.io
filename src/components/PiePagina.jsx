@@ -4,7 +4,7 @@ import { NEGOCIO } from '../lib/config'
 import { urlWhatsApp } from '../lib/whatsapp'
 
 export default function PiePagina() {
-  const { ajustes } = useTienda()
+  const { ajustes, seccionesActivas } = useTienda()
   return (
     <footer className="pie">
       <div className="contenedor pie-grid">
@@ -24,8 +24,7 @@ export default function PiePagina() {
           )}
         </div>
         <div className="pie-links">
-          <Link to="/pinatas">Piñatas</Link>
-          <Link to="/dulceria">Dulcería</Link>
+          {seccionesActivas.map((s) => <Link key={s.id} to={`/${s.id}`}>{s.nombre}</Link>)}
           <Link to="/admin">Acceso administrador</Link>
         </div>
       </div>

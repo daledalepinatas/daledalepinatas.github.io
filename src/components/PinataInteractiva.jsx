@@ -61,7 +61,7 @@ export default function PinataInteractiva() {
           <p className="pinata-rota-titulo">¡Le diste! 🎉</p>
           <p>Ahora elige la tuya y llénala de dulces.</p>
           <div className="acciones">
-            <Link to="/pinatas" className="btn btn-primario">Ver piñatas</Link>
+            <a href="#secciones" className="btn btn-primario" onClick={(e) => { e.preventDefault(); document.getElementById('secciones')?.scrollIntoView({ behavior: 'smooth' }) }}>Ver catálogo</a>
             <button className="btn btn-claro" onClick={() => setGolpes(0)}>Colgar otra 🪅</button>
           </div>
         </div>

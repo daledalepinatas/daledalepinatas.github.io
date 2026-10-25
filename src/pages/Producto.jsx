@@ -1,6 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
 import { useTienda } from '../context/Tienda'
-import { SECCIONES } from '../lib/config'
 import { precio } from '../lib/formato'
 import { enlaceProducto, mensajeProducto, urlWhatsApp } from '../lib/whatsapp'
 import Imagen from '../components/Imagen'
@@ -30,14 +29,14 @@ export default function Producto() {
         {!p ? (
           <div className="estado-vacio">
             <p>😕 No encontramos el producto <b>{codigo}</b>.</p>
-            <Link to="/pinatas" className="btn btn-primario">Ver catálogo</Link>
+            <Link to="/" className="btn btn-primario">Ver catálogo</Link>
           </div>
         ) : (
           <>
             <nav className="migas">
-              <Link to={SECCIONES[p.categoria.seccion].ruta}>{SECCIONES[p.categoria.seccion].nombre}</Link>
+              <Link to={`/${p.categoria.seccion}`}>{p.categoria.seccionInfo.nombre}</Link>
               {' / '}
-              <Link to={`${SECCIONES[p.categoria.seccion].ruta}/${p.categoria.slug}`}>{p.categoria.nombre}</Link>
+              <Link to={`/${p.categoria.seccion}/${p.categoria.slug}`}>{p.categoria.nombre}</Link>
             </nav>
             <div className="detalle">
               <div className="detalle-imagen">

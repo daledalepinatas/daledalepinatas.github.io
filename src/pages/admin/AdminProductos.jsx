@@ -2,12 +2,12 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTienda } from '../../context/Tienda'
 import { cambiarEstadoProducto, eliminarProducto } from '../../lib/api'
-import { ESTADOS, SECCIONES } from '../../lib/config'
+import { ESTADOS } from '../../lib/config'
 import { normalizarBusqueda, precio } from '../../lib/formato'
 import Imagen from '../../components/Imagen'
 
 export default function AdminProductos() {
-  const { productos, categorias, recargar, notificar } = useTienda()
+  const { productos, categorias, secciones, recargar, notificar } = useTienda()
   const [busqueda, setBusqueda] = useState('')
   const [seccion, setSeccion] = useState('')
   const [categoria, setCategoria] = useState('')
@@ -56,7 +56,7 @@ export default function AdminProductos() {
         />
         <select value={seccion} onChange={(e) => { setSeccion(e.target.value); setCategoria('') }} aria-label="Sección">
           <option value="">Todas las secciones</option>
-          {Object.values(SECCIONES).map((s) => <option key={s.id} value={s.id}>{s.nombre}</option>)}
+          {secciones.map((s) => <option key={s.id} value={s.id}>{s.emoji} {s.nombre}{s.activa ? '' : ' (oculta)'}</option>)}
         </select>
         <select value={categoria} onChange={(e) => setCategoria(e.target.value)} aria-label="Categoría">
           <option value="">Todas las categorías</option>
@@ -83,6 +83,7 @@ export default function AdminProductos() {
               <span className="texto-suave">
                 {p.categoria ? `${p.categoria.emoji} ${p.categoria.nombre}` : 'Sin categoría'}
                 {p.categoria && !p.categoria.activa && ' (categoría desactivada)'}
+                {p.categoria?.seccionInfo && !p.categoria.seccionInfo.activa && ' (sección oculta)'}
               </span>
             </div>
             <b className="admin-precio">{precio(p.precio)}</b>

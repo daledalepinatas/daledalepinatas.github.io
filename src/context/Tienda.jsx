@@ -13,8 +13,8 @@ function leerPedido() {
 }
 
 export function TiendaProvider({ children }) {
-  const [catalogo, setCatalogo] = useState({ categorias: [], productos: [] })
-  const [ajustes, setAjustes] = useState({ whatsapp: '', horario: '', ubicacion: '', aviso: '' })
+  const [catalogo, setCatalogo] = useState({ secciones: [], categorias: [], productos: [] })
+  const [ajustes, setAjustes] = useState({ whatsapp: '', horario: '', ubicacion: '', aviso: '', personalizada_activa: true })
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
   const [usuario, setUsuario] = useState(null)
@@ -55,13 +55,17 @@ export function TiendaProvider({ children }) {
   }, [])
 
   const valor = useMemo(() => {
-    // Productos enriquecidos con su categoría; "publicos" = lo que ve el cliente.
-    const porId = Object.fromEntries(catalogo.categorias.map((c) => [c.id, c]))
+    // Productos enriquecidos con su categoría y sección; "publicos" = lo que ve el cliente.
+    const secciones = [...catalogo.secciones].sort((a, b) => a.orden - b.orden)
+    const seccionPorId = Object.fromEntries(secciones.map((x) => [x.id, x]))
+    const seccionesActivas = secciones.filter((x) => x.activa)
+    const categoriasConSeccion = catalogo.categorias.map((c) => ({ ...c, seccionInfo: seccionPorId[c.seccion] }))
+    const porId = Object.fromEntries(categoriasConSeccion.map((c) => [c.id, c]))
     const productos = catalogo.productos.map((p) => ({ ...p, categoria: porId[p.categoria_id] }))
-    const publicos = productos.filter((p) => p.categoria?.activa && p.estado !== 'oculto')
-    const categoriasActivas = catalogo.categorias
-      .filter((c) => c.activa)
-      .sort((a, b) => a.orden - b.orden)
+    const visible = (c) => c?.activa && c.seccionInfo?.activa
+    const publicos = productos.filter((p) => visible(p.categoria) && p.estado !== 'oculto')
+    const categoriasActivas = categoriasConSeccion.filter(visible).sort((a, b) => a.orden - b.orden)
+    const personalizadaVisible = ajustes.personalizada_activa !== false
 
     const agregarAlPedido = (p, cantidad = 1) => {
       setPedido((actual) => {
@@ -81,7 +85,11 @@ export function TiendaProvider({ children }) {
       error,
       recargar,
       ajustes,
-      categorias: catalogo.categorias,
+      secciones,
+      seccionesActivas,
+      seccionPorId,
+      personalizadaVisible,
+      categorias: categoriasConSeccion,
       categoriasActivas,
       productos,
       publicos,

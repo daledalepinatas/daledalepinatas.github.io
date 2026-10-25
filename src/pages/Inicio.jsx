@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom'
 import { useTienda } from '../context/Tienda'
-import { NEGOCIO, PERSONALIZADA, SECCIONES } from '../lib/config'
+import { NEGOCIO, PERSONALIZADA, SECCION_PERSONALIZADA } from '../lib/config'
 import PinataInteractiva from '../components/PinataInteractiva'
 import TarjetaProducto from '../components/TarjetaProducto'
 import Cargando from '../components/Cargando'
+import Imagen from '../components/Imagen'
 
 export default function Inicio() {
-  const { categoriasActivas, publicos } = useTienda()
+  const { categoriasActivas, publicos, seccionesActivas, personalizadaVisible } = useTienda()
   const destacados = publicos.filter((p) => p.destacado && p.estado === 'disponible').slice(0, 8)
 
   return (
@@ -22,9 +23,12 @@ export default function Inicio() {
             </h1>
             <p className="heroe-texto">{NEGOCIO.lema}</p>
             <div className="acciones">
-              <Link to="/pinatas" className="btn btn-primario">🪅 Ver piñatas</Link>
-              <Link to={PERSONALIZADA.ruta} className="btn btn-claro">✨ Diseña la tuya</Link>
-              <Link to="/dulceria" className="btn btn-claro">🍬 Ir a la dulcería</Link>
+              {seccionesActivas.slice(0, 2).map((sec, i) => (
+                <Link key={sec.id} to={`/${sec.id}`} className={`btn ${i === 0 ? 'btn-primario' : 'btn-claro'}`}>
+                  {sec.emoji} {sec.nombre}
+                </Link>
+              ))}
+              {personalizadaVisible && <Link to={PERSONALIZADA.ruta} className="btn btn-claro">✨ Diseña la tuya</Link>}
             </div>
           </div>
           <PinataInteractiva />
@@ -32,17 +36,38 @@ export default function Inicio() {
       </section>
 
       <Cargando>
-        {Object.values(SECCIONES).map((sec) => {
+        {seccionesActivas.length > 0 && (
+          <section id="secciones" className="contenedor seccion">
+            <h2>¿Qué estás buscando?</h2>
+            <div className="tarjetas-seccion">
+              {seccionesActivas.map((sec) => (
+                <Link key={sec.id} to={`/${sec.id}`} className="tarjeta-seccion">
+                  <Imagen src={sec.imagen_url} alt={sec.nombre} />
+                  <span>{sec.emoji} {sec.nombre}</span>
+                </Link>
+              ))}
+              {personalizadaVisible && (
+                <Link to={PERSONALIZADA.ruta} className="tarjeta-seccion tarjeta-seccion-especial">
+                  <div className="imagen-vacia">✨</div>
+                  <span>{PERSONALIZADA.emoji} {PERSONALIZADA.nombre}</span>
+                </Link>
+              )}
+            </div>
+          </section>
+        )}
+
+        {seccionesActivas.map((sec) => {
           const cats = categoriasActivas.filter((c) => c.seccion === sec.id)
-          if (!cats.length) return null
+          const conPersonalizada = sec.id === SECCION_PERSONALIZADA && personalizadaVisible
+          if (!cats.length && !conPersonalizada) return null
           return (
             <section key={sec.id} className="contenedor seccion">
               <div className="seccion-titulo">
-                <h2>{sec.emoji} {sec.id === 'pinatas' ? 'Encuentra tu piñata' : 'Dulcería para rellenar'}</h2>
-                <Link to={sec.ruta}>Ver todo →</Link>
+                <h2>{sec.emoji} {sec.nombre}</h2>
+                <Link to={`/${sec.id}`}>Ver todo →</Link>
               </div>
               <div className="chips-grandes">
-                {sec.id === 'pinatas' && (
+                {conPersonalizada && (
                   <Link to={PERSONALIZADA.ruta} className="chip-grande chip-grande-especial">
                     <span className="chip-emoji">{PERSONALIZADA.emoji}</span>
                     {PERSONALIZADA.nombre}
@@ -50,7 +75,7 @@ export default function Inicio() {
                   </Link>
                 )}
                 {cats.map((c) => (
-                  <Link key={c.id} to={`${sec.ruta}/${c.slug}`} className="chip-grande">
+                  <Link key={c.id} to={`/${sec.id}/${c.slug}`} className="chip-grande">
                     <span className="chip-emoji">{c.emoji}</span>
                     {c.nombre}
                   </Link>

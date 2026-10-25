@@ -5,7 +5,7 @@ import { MODO_DEMO } from '../lib/api'
 import { NEGOCIO } from '../lib/config'
 
 export default function Encabezado() {
-  const { ajustes, pedido, usuario } = useTienda()
+  const { ajustes, pedido, usuario, seccionesActivas, personalizadaVisible } = useTienda()
   const [abierto, setAbierto] = useState(false)
   const piezas = pedido.reduce((s, i) => s + i.cantidad, 0)
   const cerrar = () => setAbierto(false)
@@ -37,9 +37,10 @@ export default function Encabezado() {
         </button>
         <nav className={`menu ${abierto ? 'abierto' : ''}`} onClick={cerrar}>
           <NavLink to="/" end>Inicio</NavLink>
-          <NavLink to="/pinatas">🪅 Piñatas</NavLink>
-          <NavLink to="/personalizada">✨ Personalizada</NavLink>
-          <NavLink to="/dulceria">🍬 Dulcería</NavLink>
+          {seccionesActivas.map((s) => (
+            <NavLink key={s.id} to={`/${s.id}`}>{s.emoji} {s.nombre}</NavLink>
+          ))}
+          {personalizadaVisible && <NavLink to="/personalizada">✨ Personalizada</NavLink>}
           <NavLink to="/pedido" className="menu-pedido">
             🛍️ Mi pedido {piezas > 0 && <span className="globo-numero">{piezas}</span>}
           </NavLink>
