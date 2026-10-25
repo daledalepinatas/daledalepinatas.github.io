@@ -29,7 +29,7 @@ export default function PiePagina() {
           <Link to="/admin">Acceso administrador</Link>
         </div>
       </div>
-      <p className="pie-legal">Fotos de muestra: Pexels (licencia libre). Precios en pesos mexicanos.</p>
+      <p className="pie-legal">Fotos de muestra: Unsplash (licencia gratuita). Precios en pesos mexicanos.</p>
     </footer>
   )
 }

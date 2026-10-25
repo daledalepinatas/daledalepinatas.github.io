@@ -1,30 +1,30 @@
-// Datos de PRUEBA genéricos. Las fotos son de Pexels (licencia libre, sin atribución obligatoria):
-// https://www.pexels.com/license/ — reemplázalas por fotos reales de tus productos.
+// Datos de PRUEBA genéricos. Las fotos son de Unsplash (licencia gratuita, sin atribución obligatoria;
+// se excluyen las de pago "Unsplash+"): https://unsplash.com/license — reemplázalas por fotos reales.
 // Este archivo también genera supabase/seed.sql (npm run seed:sql).
 
-const px = (ruta) => `https://images.pexels.com/photos/${ruta}?auto=compress&cs=tinysrgb&w=800`
+const us = (id) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=800&q=80`
 
 export const IMAGENES = {
-  muroPinatas: px('29837343/pexels-photo-29837343/free-photo-of-colorful-mexican-art-wall-with-pinatas.jpeg'),
-  pinataColores: px('29726848/pexels-photo-29726848/free-photo-of-colorful-pinata-and-christmas-ornaments.jpeg'),
-  pinataJardin: px('10037055/pexels-photo-10037055.jpeg'),
-  unicornio: px('6191535/pexels-photo-6191535.jpeg'),
-  unicornioCerca: px('6191534/pexels-photo-6191534.jpeg'),
-  heroeCapa: px('13417377/pexels-photo-13417377.jpeg'),
-  globos50: px('8014887/pexels-photo-8014887.jpeg'),
-  velas21: px('8014936/pexels-photo-8014936.jpeg'),
-  calabaza: px('5477538/pexels-photo-5477538.jpeg'),
-  boo: px('5420833/pexels-photo-5420833.jpeg'),
-  calaca: px('39246940/pexels-photo-39246940/free-photo-of-day-of-the-dead-skeleton-decoration-in-guanajuato.jpeg'),
-  babyShower: px('1682462/pexels-photo-1682462.jpeg'),
-  babyGlobos: px('33542457/pexels-photo-33542457/free-photo-of-outdoor-baby-shower-setup-with-balloons-and-toys.jpeg'),
-  boda: px('32073438/pexels-photo-32073438/free-photo-of-elegant-outdoor-wedding-reception-celebration.jpeg'),
-  gomitas: px('1193742/pexels-photo-1193742.jpeg'),
-  paletas: px('5469215/pexels-photo-5469215.jpeg'),
-  chocolates: px('65547/pexels-photo-65547.jpeg'),
-  enchilados: px('8480925/pexels-photo-8480925.jpeg'),
-  bombones: px('5890119/pexels-photo-5890119.jpeg'),
-  surtido: px('5469039/pexels-photo-5469039.jpeg'),
+  estrella7: us('1778472468507-335011815f7f'),
+  estrellaCalle: us('1609829643742-19485cc841ba'),
+  burrito: us('1528185796833-c5827a298584'),
+  numero50: us('1791600158462-ab9a93c248d4'),
+  letras: us('1772758767181-c5a93b8a52b2'),
+  heroe: us('1542000551557-3fd0ad0eb15f'),
+  unicornio: us('1607653150149-526b2744ca60'),
+  corona: us('1673640525972-3c0dd5e6a933'),
+  calabaza: us('1508361001413-7a9dca21d08a'),
+  fantasma: us('1635442061163-be4e9f34be3b'),
+  calaveritas: us('1601325979086-d54da2c7419c'),
+  movilBebe: us('1543346242-2b8e41fb91ca'),
+  pinataPastel: us('1562077477-eb2409f73c49'),
+  boda: us('1757589227072-0dd17af42433'),
+  gomitas: us('1635342219731-4ae2bf39e1e9'),
+  paletas: us('1598188080888-42dfffa02287'),
+  chocolates: us('1599599810769-bcde5a160d32'),
+  tamarindo: us('1578075173269-4c0d554acabd'),
+  bombones: us('1518646455738-c17d10184f5e'),
+  bolsitas: us('1765317269952-82ca1acdd2ca'),
 }
 
 export const CATEGORIAS = [
@@ -58,27 +58,27 @@ const p = (codigo, categoria_id, nombre, precio, medida, descripcion, imagen_url
 })
 
 export const PRODUCTOS = [
-  p('PIN-0001', 'c04', 'Piñata Estrella 7 picos', 350, '80 cm de punta a punta', 'La clásica piñata de 7 picos con papel china de colores y flecos. Ideal para posadas y cumpleaños.', IMAGENES.pinataColores, { destacado: true }),
-  p('PIN-0002', 'c04', 'Piñata Sol Radiante', 420, '70 cm de diámetro', 'Piñata tradicional en forma de sol con rayos de colores y cara sonriente.', IMAGENES.muroPinatas, { destacado: true }),
-  p('PIN-0003', 'c04', 'Piñata Estrella Mini 5 picos', 180, '45 cm', 'Versión pequeña de la estrella tradicional, perfecta para fiestas infantiles.', IMAGENES.pinataJardin),
-  p('PIN-0004', 'c01', 'Piñata Número a elegir', 380, '60 cm de alto', 'Número del 0 al 9 forrado en papel china del color que elijas. Indica el número al pedir.', IMAGENES.globos50, { destacado: true }),
-  p('PIN-0005', 'c01', 'Piñata Letra inicial', 380, '60 cm de alto', 'La inicial del festejado en el color de tu fiesta.', IMAGENES.velas21),
-  p('PIN-0006', 'c02', 'Piñata Héroe con capa', 450, '90 cm de alto', 'Figura de superhéroe genérico con capa de tela. Colores a elegir.', IMAGENES.heroeCapa),
-  p('PIN-0007', 'c02', 'Piñata Escudo de héroe', 320, '60 cm', 'Escudo redondo con estrella al centro. Ligera y fácil de colgar.', IMAGENES.heroeCapa, { estado: 'agotado' }),
+  p('PIN-0001', 'c04', 'Piñata Estrella 7 picos', 350, '80 cm de punta a punta', 'La clásica piñata de 7 picos con papel china de colores y flecos. Ideal para posadas y cumpleaños.', IMAGENES.estrella7, { destacado: true }),
+  p('PIN-0002', 'c04', 'Piñata Sol Radiante', 420, '70 cm de diámetro', 'Piñata tradicional en forma de sol con rayos de colores y cara sonriente.', IMAGENES.estrellaCalle, { destacado: true }),
+  p('PIN-0003', 'c04', 'Piñata Estrella Mini 5 picos', 180, '45 cm', 'Versión pequeña de la estrella tradicional, perfecta para fiestas infantiles.', IMAGENES.burrito),
+  p('PIN-0004', 'c01', 'Piñata Número a elegir', 380, '60 cm de alto', 'Número del 0 al 9 forrado en papel china del color que elijas. Indica el número al pedir.', IMAGENES.numero50, { destacado: true }),
+  p('PIN-0005', 'c01', 'Piñata Letra inicial', 380, '60 cm de alto', 'La inicial del festejado en el color de tu fiesta.', IMAGENES.letras),
+  p('PIN-0006', 'c02', 'Piñata Héroe con capa', 450, '90 cm de alto', 'Figura de superhéroe genérico con capa de tela. Colores a elegir.', IMAGENES.heroe),
+  p('PIN-0007', 'c02', 'Piñata Escudo de héroe', 320, '60 cm', 'Escudo redondo con estrella al centro. Ligera y fácil de colgar.', IMAGENES.heroe, { estado: 'agotado' }),
   p('PIN-0008', 'c03', 'Piñata Unicornio Mágico', 430, '75 cm de alto', 'Unicornio con cuerno dorado y melena de colores pastel.', IMAGENES.unicornio, { destacado: true }),
-  p('PIN-0009', 'c03', 'Piñata Corona de princesa', 300, '50 cm', 'Corona brillante con detalles dorados y “joyas” de papel metálico.', IMAGENES.unicornioCerca),
+  p('PIN-0009', 'c03', 'Piñata Corona de princesa', 300, '50 cm', 'Corona brillante con detalles dorados y “joyas” de papel metálico.', IMAGENES.corona),
   p('PIN-0010', 'c05', 'Piñata Calabaza', 280, '50 cm', 'Calabaza naranja con carita para tu fiesta de Halloween.', IMAGENES.calabaza),
-  p('PIN-0011', 'c05', 'Piñata Fantasmita BOO', 260, '55 cm', 'Fantasma blanco con flecos plateados.', IMAGENES.boo),
-  p('PIN-0012', 'c05', 'Piñata Calaverita catrina', 390, '60 cm', 'Calavera decorada con flores de papel para Día de Muertos.', IMAGENES.calaca, { destacado: true }),
-  p('PIN-0013', 'c06', 'Piñata Biberón', 340, '65 cm', 'Biberón en tonos pastel. Elige rosa, azul o neutro.', IMAGENES.babyShower),
-  p('PIN-0014', 'c06', 'Piñata Osito bebé', 360, '60 cm', 'Osito tierno con moño, perfecto para revelación de género.', IMAGENES.babyGlobos),
+  p('PIN-0011', 'c05', 'Piñata Fantasmita BOO', 260, '55 cm', 'Fantasma blanco con flecos plateados.', IMAGENES.fantasma),
+  p('PIN-0012', 'c05', 'Piñata Calaverita catrina', 390, '60 cm', 'Calavera decorada con flores de papel para Día de Muertos.', IMAGENES.calaveritas, { destacado: true }),
+  p('PIN-0013', 'c06', 'Piñata Biberón', 340, '65 cm', 'Biberón en tonos pastel. Elige rosa, azul o neutro.', IMAGENES.movilBebe),
+  p('PIN-0014', 'c06', 'Piñata Osito bebé', 360, '60 cm', 'Osito tierno con moño, perfecto para revelación de género.', IMAGENES.pinataPastel),
   p('PIN-0015', 'c07', 'Piñata Corazón para boda', 400, '60 cm', 'Corazón blanco con flecos dorados. Se puede personalizar con iniciales.', IMAGENES.boda),
   p('DUL-0001', 'c08', 'Gomitas surtidas', 95, 'Bolsa de 1 kg', 'Ositos y figuras de gomita de sabores surtidos.', IMAGENES.gomitas, { destacado: true }),
   p('DUL-0002', 'c09', 'Paletas de caramelo surtidas', 85, 'Bolsa de 50 piezas', 'Paletas de caramelo macizo de sabores frutales.', IMAGENES.paletas),
   p('DUL-0003', 'c10', 'Chocolates confitados', 120, 'Bolsa de 1 kg', 'Chocolates cubiertos de colores, a granel.', IMAGENES.chocolates),
-  p('DUL-0004', 'c11', 'Mix enchilado', 110, 'Bolsa de 1 kg', 'Mezcla de dulces de tamarindo y enchilados.', IMAGENES.enchilados),
+  p('DUL-0004', 'c11', 'Mix enchilado', 110, 'Bolsa de 1 kg', 'Mezcla de dulces de tamarindo y enchilados.', IMAGENES.tamarindo),
   p('DUL-0005', 'c12', 'Bombones de colores', 70, 'Bolsa de 500 g', 'Bombones suaves trenzados de colores.', IMAGENES.bombones),
-  p('DUL-0006', 'c13', 'Bolsita de relleno básica', 25, '1 bolsita (≈ 20 dulces)', 'Mezcla lista para rellenar piñatas o repartir como bolo.', IMAGENES.surtido, { destacado: true }),
+  p('DUL-0006', 'c13', 'Bolsita de relleno básica', 25, '1 bolsita (≈ 20 dulces)', 'Mezcla lista para rellenar piñatas o repartir como bolo.', IMAGENES.bolsitas, { destacado: true }),
 ]
 
 export const AJUSTES = {

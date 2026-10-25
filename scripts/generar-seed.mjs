@@ -20,7 +20,7 @@ const maxDe = (pref) => Math.max(0, ...PRODUCTOS.filter((p) => p.codigo.startsWi
 const sql = `-- =====================================================================
 --  DATOS DE PRUEBA genéricos (generado con: npm run seed:sql — no editar a mano)
 --  Ejecútalo en Supabase > SQL Editor DESPUÉS de schema.sql. Opcional.
---  Fotos de Pexels (licencia libre): https://www.pexels.com/license/
+--  Fotos de Unsplash (licencia gratuita): https://unsplash.com/license
 -- =====================================================================
 
 insert into public.categorias (seccion, nombre, slug, emoji, orden, activa) values

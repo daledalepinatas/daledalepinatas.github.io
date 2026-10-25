@@ -67,4 +67,4 @@ supabase/             esquema SQL y datos de prueba
 .github/workflows/    publicación automática
 ```
 
-Fotos de muestra: [Pexels](https://www.pexels.com/license/) (licencia libre). Reemplázalas por fotos reales.
+Fotos de muestra: [Unsplash](https://unsplash.com/license) (licencia gratuita). Reemplázalas por fotos reales.
