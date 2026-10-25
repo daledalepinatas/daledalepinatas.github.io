@@ -28,13 +28,16 @@ export const IMAGENES = {
 }
 
 export const CATEGORIAS = [
-  { id: 'c01', seccion: 'pinatas', slug: 'letras-y-numeros', nombre: 'Letras y números', emoji: '🔢', orden: 1, activa: true },
-  { id: 'c02', seccion: 'pinatas', slug: 'superheroes', nombre: 'Superhéroes', emoji: '🦸', orden: 2, activa: true },
-  { id: 'c03', seccion: 'pinatas', slug: 'princesas', nombre: 'Princesas', emoji: '👑', orden: 3, activa: true },
-  { id: 'c04', seccion: 'pinatas', slug: 'de-picos-y-sol', nombre: 'De picos y sol (tradicionales)', emoji: '⭐', orden: 4, activa: true },
-  { id: 'c05', seccion: 'pinatas', slug: 'halloween-y-dia-de-muertos', nombre: 'Halloween y Día de Muertos', emoji: '💀', orden: 5, activa: true },
-  { id: 'c06', seccion: 'pinatas', slug: 'baby-shower', nombre: 'Baby shower', emoji: '🍼', orden: 6, activa: true },
-  { id: 'c07', seccion: 'pinatas', slug: 'bodas', nombre: 'Bodas', emoji: '💍', orden: 7, activa: true },
+  // La sección "✨ Personalizada" no es una categoría: es un formulario fijo que siempre va primero.
+  { id: 'c01', seccion: 'pinatas', slug: 'letras', nombre: 'Letras', emoji: '🔤', orden: 2, activa: true },
+  { id: 'c14', seccion: 'pinatas', slug: 'numeros', nombre: 'Números', emoji: '🔢', orden: 3, activa: true },
+  { id: 'c04', seccion: 'pinatas', slug: 'de-picos', nombre: 'De picos', emoji: '⭐', orden: 4, activa: true },
+  // Categorías ocultas ("Ya no se vende"): se pueden reactivar desde el panel.
+  { id: 'c02', seccion: 'pinatas', slug: 'superheroes', nombre: 'Superhéroes', emoji: '🦸', orden: 5, activa: false },
+  { id: 'c03', seccion: 'pinatas', slug: 'princesas', nombre: 'Princesas', emoji: '👑', orden: 6, activa: false },
+  { id: 'c05', seccion: 'pinatas', slug: 'halloween-y-dia-de-muertos', nombre: 'Halloween y Día de Muertos', emoji: '💀', orden: 7, activa: false },
+  { id: 'c06', seccion: 'pinatas', slug: 'baby-shower', nombre: 'Baby shower', emoji: '🍼', orden: 8, activa: false },
+  { id: 'c07', seccion: 'pinatas', slug: 'bodas', nombre: 'Bodas', emoji: '💍', orden: 9, activa: false },
   { id: 'c08', seccion: 'dulceria', slug: 'gomitas', nombre: 'Gomitas', emoji: '🐻', orden: 1, activa: true },
   { id: 'c09', seccion: 'dulceria', slug: 'paletas', nombre: 'Paletas', emoji: '🍭', orden: 2, activa: true },
   { id: 'c10', seccion: 'dulceria', slug: 'chocolates', nombre: 'Chocolates', emoji: '🍫', orden: 3, activa: true },
@@ -61,7 +64,7 @@ export const PRODUCTOS = [
   p('PIN-0001', 'c04', 'Piñata Estrella 7 picos', 350, '80 cm de punta a punta', 'La clásica piñata de 7 picos con papel china de colores y flecos. Ideal para posadas y cumpleaños.', IMAGENES.estrella7, { destacado: true }),
   p('PIN-0002', 'c04', 'Piñata Sol Radiante', 420, '70 cm de diámetro', 'Piñata tradicional en forma de sol con rayos de colores y cara sonriente.', IMAGENES.estrellaCalle, { destacado: true }),
   p('PIN-0003', 'c04', 'Piñata Estrella Mini 5 picos', 180, '45 cm', 'Versión pequeña de la estrella tradicional, perfecta para fiestas infantiles.', IMAGENES.burrito),
-  p('PIN-0004', 'c01', 'Piñata Número a elegir', 380, '60 cm de alto', 'Número del 0 al 9 forrado en papel china del color que elijas. Indica el número al pedir.', IMAGENES.numero50, { destacado: true }),
+  p('PIN-0004', 'c14', 'Piñata Número a elegir', 380, '60 cm de alto', 'Número del 0 al 9 forrado en papel china del color que elijas. Indica el número al pedir.', IMAGENES.numero50, { destacado: true }),
   p('PIN-0005', 'c01', 'Piñata Letra inicial', 380, '60 cm de alto', 'La inicial del festejado en el color de tu fiesta.', IMAGENES.letras),
   p('PIN-0006', 'c02', 'Piñata Héroe con capa', 450, '90 cm de alto', 'Figura de superhéroe genérico con capa de tela. Colores a elegir.', IMAGENES.heroe),
   p('PIN-0007', 'c02', 'Piñata Escudo de héroe', 320, '60 cm', 'Escudo redondo con estrella al centro. Ligera y fácil de colgar.', IMAGENES.heroe, { estado: 'agotado' }),

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useTienda } from '../context/Tienda'
-import { NEGOCIO, SECCIONES } from '../lib/config'
+import { NEGOCIO, PERSONALIZADA, SECCIONES } from '../lib/config'
 import PinataInteractiva from '../components/PinataInteractiva'
 import TarjetaProducto from '../components/TarjetaProducto'
 import Cargando from '../components/Cargando'
@@ -23,6 +23,7 @@ export default function Inicio() {
             <p className="heroe-texto">{NEGOCIO.lema}</p>
             <div className="acciones">
               <Link to="/pinatas" className="btn btn-primario">🪅 Ver piñatas</Link>
+              <Link to={PERSONALIZADA.ruta} className="btn btn-claro">✨ Diseña la tuya</Link>
               <Link to="/dulceria" className="btn btn-claro">🍬 Ir a la dulcería</Link>
             </div>
           </div>
@@ -41,6 +42,13 @@ export default function Inicio() {
                 <Link to={sec.ruta}>Ver todo →</Link>
               </div>
               <div className="chips-grandes">
+                {sec.id === 'pinatas' && (
+                  <Link to={PERSONALIZADA.ruta} className="chip-grande chip-grande-especial">
+                    <span className="chip-emoji">{PERSONALIZADA.emoji}</span>
+                    {PERSONALIZADA.nombre}
+                    <small>Tú eliges el diseño</small>
+                  </Link>
+                )}
                 {cats.map((c) => (
                   <Link key={c.id} to={`${sec.ruta}/${c.slug}`} className="chip-grande">
                     <span className="chip-emoji">{c.emoji}</span>

@@ -16,3 +16,20 @@ export const ESTADOS = {
   agotado: 'Agotado',
   oculto: 'Oculto (no se muestra)',
 }
+
+// Piñata personalizada: formulario fijo, primero en la sección de piñatas.
+export const PERSONALIZADA = { nombre: 'Personalizada', emoji: '✨', ruta: '/personalizada' }
+
+export const TAMANOS = {
+  chica: 'Chica (50 cm)',
+  normal: 'Normal (90 cm)',
+  grande: 'Grande (90 cm en adelante)',
+}
+
+export const ESTADOS_PERSONALIZADA = {
+  nueva: 'Nueva',
+  cotizada: 'Cotizada',
+  aceptada: 'Aceptada',
+  entregada: 'Entregada',
+  cancelada: 'Cancelada',
+}

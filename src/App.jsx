@@ -8,6 +8,7 @@ import Inicio from './pages/Inicio'
 import Catalogo from './pages/Catalogo'
 import Producto from './pages/Producto'
 import Pedido from './pages/Pedido'
+import Personalizada from './pages/Personalizada'
 import NoEncontrado from './pages/NoEncontrado'
 import Admin from './pages/admin/Admin'
 
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/dulceria" element={<Catalogo seccion="dulceria" />} />
           <Route path="/dulceria/:slug" element={<Catalogo seccion="dulceria" />} />
           <Route path="/p/:codigo" element={<Producto />} />
+          <Route path="/personalizada" element={<Personalizada />} />
           <Route path="/pedido" element={<Pedido />} />
           <Route path="/admin/*" element={<Admin />} />
           <Route path="*" element={<NoEncontrado />} />

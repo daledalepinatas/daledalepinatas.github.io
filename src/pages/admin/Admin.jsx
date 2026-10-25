@@ -6,6 +6,7 @@ import AdminProductos from './AdminProductos'
 import FormularioProducto from './FormularioProducto'
 import AdminCategorias from './AdminCategorias'
 import AdminAjustes from './AdminAjustes'
+import AdminPersonalizadas from './AdminPersonalizadas'
 
 export default function Admin() {
   const { usuario, refrescarUsuario, recargar, notificar } = useTienda()
@@ -53,6 +54,7 @@ export default function Admin() {
       </div>
       <nav className="pestanas">
         <NavLink to="/admin" end>🪅 Productos</NavLink>
+        <NavLink to="/admin/personalizadas">✨ Personalizadas</NavLink>
         <NavLink to="/admin/categorias">🗂️ Categorías</NavLink>
         <NavLink to="/admin/ajustes">💬 WhatsApp y ajustes</NavLink>
       </nav>
@@ -60,6 +62,7 @@ export default function Admin() {
         <Route index element={<AdminProductos />} />
         <Route path="nuevo" element={<FormularioProducto />} />
         <Route path="editar/:id" element={<FormularioProducto />} />
+        <Route path="personalizadas" element={<AdminPersonalizadas />} />
         <Route path="categorias" element={<AdminCategorias />} />
         <Route path="ajustes" element={<AdminAjustes />} />
       </Routes>

@@ -22,12 +22,13 @@ function traducirError(msg) {
   if (/row-level security|permission denied/i.test(msg)) return 'No tienes permiso para hacer esto. Inicia sesión como administrador.'
   if (/violates foreign key/i.test(msg)) return 'No se puede eliminar: todavía hay productos en esta categoría.'
   if (/duplicate key/i.test(msg)) return 'Ya existe un registro con ese nombre.'
+  if (/check constraint/i.test(msg)) return 'Revisa los datos: algún campo está vacío o es demasiado largo.'
   if (/Failed to fetch|NetworkError/i.test(msg)) return 'Sin conexión. Revisa tu internet e inténtalo de nuevo.'
   return msg
 }
 
 // ---------- Modo demostración (localStorage) ----------
-const CLAVE_DEMO = 'daledale-demo-v1'
+const CLAVE_DEMO = 'daledale-demo-v2'
 const CLAVE_SESION_DEMO = 'daledale-demo-sesion'
 
 function leerDemo() {
@@ -188,6 +189,63 @@ export async function guardarAjustes(ajustes) {
     return
   }
   falla((await sb.from('ajustes').upsert({ id: 1, ...campos })).error)
+}
+
+// ---------- Piñatas personalizadas ----------
+// Devuelve el folio (PER-0001) que el cliente manda por WhatsApp.
+export async function crearPersonalizada(solicitud) {
+  const datos = {
+    diseno: solicitud.diseno.trim(),
+    tamano: solicitud.tamano,
+    detalles: solicitud.detalles?.trim() || '',
+    fecha_evento: solicitud.fecha_evento || null,
+    con_foto: !!solicitud.con_foto,
+  }
+  if (MODO_DEMO) {
+    const estado = leerDemo()
+    estado.personalizadas ??= []
+    estado.consecutivos.PER = (estado.consecutivos.PER || 0) + 1
+    const folio = `PER-${String(estado.consecutivos.PER).padStart(4, '0')}`
+    estado.personalizadas.unshift({ id: nuevoId(), folio, estado: 'nueva', created_at: new Date().toISOString(), ...datos })
+    escribirDemo(estado)
+    return folio
+  }
+  const { data, error } = await sb.rpc('crear_personalizada', {
+    p_diseno: datos.diseno,
+    p_tamano: datos.tamano,
+    p_detalles: datos.detalles,
+    p_fecha_evento: datos.fecha_evento,
+    p_con_foto: datos.con_foto,
+  })
+  falla(error)
+  return data
+}
+
+export async function listarPersonalizadas() {
+  if (MODO_DEMO) return leerDemo().personalizadas || []
+  const { data, error } = await sb.from('personalizadas').select('*').order('created_at', { ascending: false })
+  falla(error)
+  return data
+}
+
+export async function cambiarEstadoPersonalizada(id, nuevoEstado) {
+  if (MODO_DEMO) {
+    const estado = leerDemo()
+    estado.personalizadas = (estado.personalizadas || []).map((s) => (s.id === id ? { ...s, estado: nuevoEstado } : s))
+    escribirDemo(estado)
+    return
+  }
+  falla((await sb.from('personalizadas').update({ estado: nuevoEstado }).eq('id', id)).error)
+}
+
+export async function eliminarPersonalizada(id) {
+  if (MODO_DEMO) {
+    const estado = leerDemo()
+    estado.personalizadas = (estado.personalizadas || []).filter((s) => s.id !== id)
+    escribirDemo(estado)
+    return
+  }
+  falla((await sb.from('personalizadas').delete().eq('id', id)).error)
 }
 
 // ---------- Imágenes ----------

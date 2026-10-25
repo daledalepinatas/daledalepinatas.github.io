@@ -38,6 +38,7 @@ export default function Encabezado() {
         <nav className={`menu ${abierto ? 'abierto' : ''}`} onClick={cerrar}>
           <NavLink to="/" end>Inicio</NavLink>
           <NavLink to="/pinatas">🪅 Piñatas</NavLink>
+          <NavLink to="/personalizada">✨ Personalizada</NavLink>
           <NavLink to="/dulceria">🍬 Dulcería</NavLink>
           <NavLink to="/pedido" className="menu-pedido">
             🛍️ Mi pedido {piezas > 0 && <span className="globo-numero">{piezas}</span>}

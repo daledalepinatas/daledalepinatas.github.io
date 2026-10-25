@@ -125,3 +125,43 @@ create policy "admin cambia fotos" on storage.objects for update to authenticate
 drop policy if exists "admin borra fotos" on storage.objects;
 create policy "admin borra fotos" on storage.objects for delete to authenticated
   using (bucket_id = 'productos' and public.es_admin());
+
+-- ---------- Piñatas personalizadas ----------
+-- El cliente llena el formulario y recibe un folio (PER-0001) que viaja en su mensaje de WhatsApp.
+-- La foto de referencia NO se guarda aquí: el cliente la adjunta directamente en el chat.
+create sequence if not exists public.consecutivo_per;
+
+create table if not exists public.personalizadas (
+  id           uuid primary key default gen_random_uuid(),
+  folio        text not null unique default ('PER-' || lpad(nextval('public.consecutivo_per')::text, 4, '0')),
+  diseno       text not null check (char_length(diseno) between 3 and 600),
+  tamano       text not null check (tamano in ('chica', 'normal', 'grande')),
+  detalles     text not null default '' check (char_length(detalles) <= 600),
+  fecha_evento date,
+  con_foto     boolean not null default false,
+  estado       text not null default 'nueva' check (estado in ('nueva', 'cotizada', 'aceptada', 'entregada', 'cancelada')),
+  created_at   timestamptz not null default now()
+);
+
+alter table public.personalizadas enable row level security;
+
+-- Solo el administrador ve y modifica las solicitudes.
+drop policy if exists "admin personalizadas" on public.personalizadas;
+create policy "admin personalizadas" on public.personalizadas for all to authenticated
+  using (public.es_admin()) with check (public.es_admin());
+
+-- Los visitantes crean solicitudes solo a través de esta función, que devuelve el folio.
+create or replace function public.crear_personalizada(
+  p_diseno text, p_tamano text, p_detalles text, p_fecha_evento date, p_con_foto boolean
+) returns text language plpgsql security definer set search_path = public as $$
+declare
+  nuevo_folio text;
+begin
+  insert into public.personalizadas (diseno, tamano, detalles, fecha_evento, con_foto)
+  values (trim(p_diseno), p_tamano, coalesce(trim(p_detalles), ''), p_fecha_evento, coalesce(p_con_foto, false))
+  returning folio into nuevo_folio;
+  return nuevo_folio;
+end $$;
+
+revoke all on function public.crear_personalizada(text, text, text, date, boolean) from public;
+grant execute on function public.crear_personalizada(text, text, text, date, boolean) to anon, authenticated;

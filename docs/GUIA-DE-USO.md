@@ -15,7 +15,8 @@ Al final hay [preguntas frecuentes](#preguntas-frecuentes).
 | Sección | Para qué sirve |
 |---|---|
 | **Inicio** | Una piñata que se puede “golpear” (5 golpes y suelta dulces 🎉), las categorías, los productos favoritos y los pasos para pedir. |
-| **🪅 Piñatas** | Catálogo por categoría: Letras y números, Superhéroes, Princesas, De picos y sol, Halloween y Día de Muertos, Baby shower, Bodas. |
+| **🪅 Piñatas** | Primero **✨ Personalizada**, luego las categorías: 🔤 Letras, 🔢 Números y ⭐ De picos. |
+| **✨ Personalizada** | Formulario: diseño que busca, foto de referencia, tamaño (Chica 50 cm · Normal 90 cm · Grande 90 cm en adelante), fecha y detalles. Le da un **folio** (`PER-0001`) y abre WhatsApp con todo escrito. |
 | **🍬 Dulcería** | Gomitas, paletas, chocolates, enchilados, bombones, bolsitas para relleno… (tú decides cuáles). |
 | **Detalle de producto** | Foto, **código**, precio, tamaño, descripción y botones *Pedir por WhatsApp*, *Agregar a mi pedido* y *Compartir enlace*. |
 | **🛍️ Mi pedido** | El cliente junta varias piñatas y dulces, ajusta cantidades y manda **un solo mensaje** con todo. |
@@ -24,6 +25,7 @@ Cada producto tiene un **código** que nunca cambia:
 
 - `PIN-0001`, `PIN-0002`, … → piñatas
 - `DUL-0001`, `DUL-0002`, … → dulcería
+- `PER-0001`, `PER-0002`, … → solicitudes de piñata personalizada
 
 ---
 
@@ -57,6 +59,15 @@ Cada producto tiene un **código** que nunca cambia:
 - **🗑️ Eliminar:** borra el producto para siempre. Si solo se acabó, mejor márcalo *Agotado* u *Oculto*.
 - **👁️** abre el producto tal como lo ve el cliente.
 
+### Pestaña ✨ Personalizadas
+
+- Cada vez que un cliente llena el formulario de piñata personalizada, aparece aquí con su **folio**,
+  diseño, tamaño, fecha y detalles.
+- **La foto de referencia no se guarda en la web:** el cliente la adjunta en el chat de WhatsApp.
+  Busca el folio del mensaje aquí para ver el resto de su pedido.
+- Cambia el **estado** conforme avanza: Nueva → Cotizada → Aceptada → Entregada (o Cancelada).
+- **↻ Actualizar** trae las solicitudes más recientes.
+
 ### Pestaña 🗂️ Categorías (y tipos de dulce)
 
 - **Agregar:** elige la sección (Piñatas o Dulcería), un emoji y el nombre → **Agregar**.
@@ -77,6 +88,19 @@ Cada producto tiene un **código** que nunca cambia:
 ---
 
 ## 3. Cómo atender un pedido por WhatsApp
+
+Una **piñata personalizada** llega así (y después el cliente manda la foto en el mismo chat):
+
+```
+¡Hola, Dale Dale! Quiero una piñata personalizada:
+
+🔖 Folio: PER-0001
+🎨 Diseño: Dinosaurio verde con el nombre Sofía
+📏 Tamaño: Normal (90 cm)
+✨ Detalles: Con flecos dorados
+📷 En seguida te envío la foto de referencia por este chat.
+```
+
 
 Cuando un cliente toca **Pedir por WhatsApp** te llega algo así:
 
@@ -126,7 +150,7 @@ contraseña no puede cambiar nada: la base de datos lo bloquea.
 En Supabase: *Authentication → Users →* tu usuario *→ Send password recovery* (o cámbiala ahí mismo).
 
 **¿Las fotos de prueba se pueden usar?**
-Son de Pexels con licencia libre, pero no son tus productos. Reemplázalas por fotos reales.
+Son de Unsplash con licencia gratuita, pero no son tus productos. Reemplázalas por fotos reales.
 
 **¿Cuánto cuesta?**
 GitHub Pages y el plan gratuito de Supabase cuestan $0. Un proyecto gratuito de Supabase se

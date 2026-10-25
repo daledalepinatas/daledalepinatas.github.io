@@ -274,3 +274,42 @@ input:focus, select:focus, textarea:focus { border-color: var(--morado); outline
 .edicion-categoria .campo-emoji { flex: 0 0 64px !important; }
 .interruptor { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
 .interruptor input { width: 20px; height: 20px; accent-color: var(--verde-wa); }
+
+/* ---------- Piñata personalizada ---------- */
+.chip-especial { background: linear-gradient(90deg, #fff3c4, #ffe0f0); border-color: var(--amarillo); }
+.chip-especial.activo { background: var(--rosa); border-color: var(--rosa); color: #fff; }
+.chip-grande-especial { background: linear-gradient(135deg, #fff3c4, #ffe0f0); border-color: var(--amarillo); }
+.chip-grande-especial small { font-weight: 600; color: var(--suave); }
+.formulario-personalizada { max-width: 720px; }
+.formulario-personalizada .btn-whatsapp { justify-self: start; }
+.campo { display: grid; gap: 6px; }
+.foto-elegir { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.foto-elegir > div:not(.foto-vacia) { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.foto-referencia { width: 120px; height: 120px; object-fit: cover; border-radius: 14px; border: 2px solid var(--borde); }
+.foto-vacia { width: 120px; height: 120px; border-radius: 14px; border: 2px dashed var(--borde); display: grid; place-items: center; font-size: 2.4rem; background: #fdf3f8; }
+.nota { margin: 0; font-size: 0.85rem; max-width: 30ch; }
+.tamanos { border: 0; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.tamanos legend { margin-bottom: 6px; }
+.tarjeta-form .tamano { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 14px 8px; border: 2px solid var(--borde); border-radius: 14px; cursor: pointer; text-align: center; background: #fff; }
+.tamano input { position: absolute; opacity: 0; pointer-events: none; }
+.tamano.elegido { border-color: var(--rosa); background: #fde7f3; }
+.tamano:focus-within { outline: 3px solid var(--morado); outline-offset: 2px; }
+.tamano-icono { line-height: 1; }
+.tamano-chica { font-size: 1.6rem; }
+.tamano-normal { font-size: 2.4rem; }
+.tamano-grande { font-size: 3.2rem; }
+.personalizada-lista { max-width: 620px; text-align: center; justify-items: center; }
+.folio { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-size: 2.2rem; font-weight: 800; background: var(--tinta); color: #fff; padding: 6px 18px; border-radius: 12px; margin: 0; }
+.pasos-envio { text-align: left; display: grid; gap: 14px; padding-left: 22px; margin: 0; width: 100%; }
+.pasos-envio li { display: grid; gap: 8px; justify-items: start; }
+
+.solicitudes { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.solicitud { background: #fff; border-radius: 14px; padding: 12px 14px; border-left: 6px solid var(--amarillo); }
+.solicitud p { margin: 6px 0 0; }
+.solicitud.estado-cotizada { border-left-color: var(--morado); }
+.solicitud.estado-aceptada { border-left-color: var(--turquesa); }
+.solicitud.estado-entregada { border-left-color: var(--verde-wa); opacity: 0.8; }
+.solicitud.estado-cancelada { border-left-color: #aaa; opacity: 0.6; }
+.solicitud-cabecera { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.solicitud-cabecera .selector-estado { width: auto; margin-left: auto; }
+.solicitud-datos { display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--suave); }

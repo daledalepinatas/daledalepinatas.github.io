@@ -5,13 +5,14 @@
 -- =====================================================================
 
 insert into public.categorias (seccion, nombre, slug, emoji, orden, activa) values
-  ('pinatas', 'Letras y números', 'letras-y-numeros', '🔢', 1, true),
-  ('pinatas', 'Superhéroes', 'superheroes', '🦸', 2, true),
-  ('pinatas', 'Princesas', 'princesas', '👑', 3, true),
-  ('pinatas', 'De picos y sol (tradicionales)', 'de-picos-y-sol', '⭐', 4, true),
-  ('pinatas', 'Halloween y Día de Muertos', 'halloween-y-dia-de-muertos', '💀', 5, true),
-  ('pinatas', 'Baby shower', 'baby-shower', '🍼', 6, true),
-  ('pinatas', 'Bodas', 'bodas', '💍', 7, true),
+  ('pinatas', 'Letras', 'letras', '🔤', 2, true),
+  ('pinatas', 'Números', 'numeros', '🔢', 3, true),
+  ('pinatas', 'De picos', 'de-picos', '⭐', 4, true),
+  ('pinatas', 'Superhéroes', 'superheroes', '🦸', 5, false),
+  ('pinatas', 'Princesas', 'princesas', '👑', 6, false),
+  ('pinatas', 'Halloween y Día de Muertos', 'halloween-y-dia-de-muertos', '💀', 7, false),
+  ('pinatas', 'Baby shower', 'baby-shower', '🍼', 8, false),
+  ('pinatas', 'Bodas', 'bodas', '💍', 9, false),
   ('dulceria', 'Gomitas', 'gomitas', '🐻', 1, true),
   ('dulceria', 'Paletas', 'paletas', '🍭', 2, true),
   ('dulceria', 'Chocolates', 'chocolates', '🍫', 3, true),
@@ -23,11 +24,11 @@ on conflict (slug) do nothing;
 insert into public.productos (codigo, categoria_id, nombre, precio, medida, descripcion, imagen_url, estado, destacado)
 select v.codigo, c.id, v.nombre, v.precio, v.medida, v.descripcion, v.imagen_url, v.estado, v.destacado
 from (values
-  ('PIN-0001', 'de-picos-y-sol', 'Piñata Estrella 7 picos', 350, '80 cm de punta a punta', 'La clásica piñata de 7 picos con papel china de colores y flecos. Ideal para posadas y cumpleaños.', 'https://images.unsplash.com/photo-1778472468507-335011815f7f?auto=format&fit=crop&w=800&q=80', 'disponible', true),
-  ('PIN-0002', 'de-picos-y-sol', 'Piñata Sol Radiante', 420, '70 cm de diámetro', 'Piñata tradicional en forma de sol con rayos de colores y cara sonriente.', 'https://images.unsplash.com/photo-1609829643742-19485cc841ba?auto=format&fit=crop&w=800&q=80', 'disponible', true),
-  ('PIN-0003', 'de-picos-y-sol', 'Piñata Estrella Mini 5 picos', 180, '45 cm', 'Versión pequeña de la estrella tradicional, perfecta para fiestas infantiles.', 'https://images.unsplash.com/photo-1528185796833-c5827a298584?auto=format&fit=crop&w=800&q=80', 'disponible', false),
-  ('PIN-0004', 'letras-y-numeros', 'Piñata Número a elegir', 380, '60 cm de alto', 'Número del 0 al 9 forrado en papel china del color que elijas. Indica el número al pedir.', 'https://images.unsplash.com/photo-1791600158462-ab9a93c248d4?auto=format&fit=crop&w=800&q=80', 'disponible', true),
-  ('PIN-0005', 'letras-y-numeros', 'Piñata Letra inicial', 380, '60 cm de alto', 'La inicial del festejado en el color de tu fiesta.', 'https://images.unsplash.com/photo-1772758767181-c5a93b8a52b2?auto=format&fit=crop&w=800&q=80', 'disponible', false),
+  ('PIN-0001', 'de-picos', 'Piñata Estrella 7 picos', 350, '80 cm de punta a punta', 'La clásica piñata de 7 picos con papel china de colores y flecos. Ideal para posadas y cumpleaños.', 'https://images.unsplash.com/photo-1778472468507-335011815f7f?auto=format&fit=crop&w=800&q=80', 'disponible', true),
+  ('PIN-0002', 'de-picos', 'Piñata Sol Radiante', 420, '70 cm de diámetro', 'Piñata tradicional en forma de sol con rayos de colores y cara sonriente.', 'https://images.unsplash.com/photo-1609829643742-19485cc841ba?auto=format&fit=crop&w=800&q=80', 'disponible', true),
+  ('PIN-0003', 'de-picos', 'Piñata Estrella Mini 5 picos', 180, '45 cm', 'Versión pequeña de la estrella tradicional, perfecta para fiestas infantiles.', 'https://images.unsplash.com/photo-1528185796833-c5827a298584?auto=format&fit=crop&w=800&q=80', 'disponible', false),
+  ('PIN-0004', 'numeros', 'Piñata Número a elegir', 380, '60 cm de alto', 'Número del 0 al 9 forrado en papel china del color que elijas. Indica el número al pedir.', 'https://images.unsplash.com/photo-1791600158462-ab9a93c248d4?auto=format&fit=crop&w=800&q=80', 'disponible', true),
+  ('PIN-0005', 'letras', 'Piñata Letra inicial', 380, '60 cm de alto', 'La inicial del festejado en el color de tu fiesta.', 'https://images.unsplash.com/photo-1772758767181-c5a93b8a52b2?auto=format&fit=crop&w=800&q=80', 'disponible', false),
   ('PIN-0006', 'superheroes', 'Piñata Héroe con capa', 450, '90 cm de alto', 'Figura de superhéroe genérico con capa de tela. Colores a elegir.', 'https://images.unsplash.com/photo-1542000551557-3fd0ad0eb15f?auto=format&fit=crop&w=800&q=80', 'disponible', false),
   ('PIN-0007', 'superheroes', 'Piñata Escudo de héroe', 320, '60 cm', 'Escudo redondo con estrella al centro. Ligera y fácil de colgar.', 'https://images.unsplash.com/photo-1542000551557-3fd0ad0eb15f?auto=format&fit=crop&w=800&q=80', 'agotado', false),
   ('PIN-0008', 'princesas', 'Piñata Unicornio Mágico', 430, '75 cm de alto', 'Unicornio con cuerno dorado y melena de colores pastel.', 'https://images.unsplash.com/photo-1607653150149-526b2744ca60?auto=format&fit=crop&w=800&q=80', 'disponible', true),

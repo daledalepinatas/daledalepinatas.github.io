@@ -43,3 +43,21 @@ export function mensajePedido(items) {
 export function urlWhatsApp(numero, mensaje) {
   return `https://wa.me/${normalizarNumero(numero)}?text=${encodeURIComponent(mensaje)}`
 }
+
+export function mensajePersonalizada(s, tamanos) {
+  const lineas = [
+    `¡Hola, ${NEGOCIO.nombreCorto}! Quiero una piñata personalizada:`,
+    '',
+    `🔖 Folio: ${s.folio}`,
+    `🎨 Diseño: ${s.diseno}`,
+    `📏 Tamaño: ${tamanos[s.tamano]}`,
+  ]
+  if (s.fecha_evento) {
+    const fecha = new Date(`${s.fecha_evento}T12:00:00`)
+    lineas.push(`📅 La necesito para: ${fecha.toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' })}`)
+  }
+  if (s.detalles) lineas.push(`✨ Detalles: ${s.detalles}`)
+  if (s.con_foto) lineas.push('📷 En seguida te envío la foto de referencia por este chat.')
+  lineas.push('', '¿Me pueden cotizar?')
+  return lineas.join('\n')
+}

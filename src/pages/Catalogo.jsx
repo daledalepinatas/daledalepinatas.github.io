@@ -4,6 +4,7 @@ import { useTienda } from '../context/Tienda'
 import { SECCIONES } from '../lib/config'
 import { normalizarBusqueda } from '../lib/formato'
 import TarjetaProducto from '../components/TarjetaProducto'
+import ChipsSeccion from '../components/ChipsSeccion'
 import Cargando from '../components/Cargando'
 
 const ORDENES = {
@@ -38,14 +39,7 @@ export default function Catalogo({ seccion }) {
         {sec.emoji} {actual ? actual.nombre : sec.nombre}
       </h1>
       <Cargando>
-        <nav className="chips" aria-label="Categorías">
-          <Link to={sec.ruta} className={!actual ? 'chip activo' : 'chip'}>Todas</Link>
-          {categorias.map((c) => (
-            <Link key={c.id} to={`${sec.ruta}/${c.slug}`} className={actual?.id === c.id ? 'chip activo' : 'chip'}>
-              {c.emoji} {c.nombre}
-            </Link>
-          ))}
-        </nav>
+        <ChipsSeccion seccion={seccion} actual={actual || null} />
 
         <div className="filtros">
           <input
