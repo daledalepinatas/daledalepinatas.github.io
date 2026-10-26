@@ -306,8 +306,9 @@ export async function eliminarPersonalizada(id) {
 }
 
 // ---------- Imágenes ----------
-export async function subirImagen(archivo) {
-  const blob = await redimensionarImagen(archivo)
+// Las fotos de producto se guardan cuadradas (1080 × 1080) sin recortar; las de sección conservan su forma.
+export async function subirImagen(archivo, opciones) {
+  const blob = await redimensionarImagen(archivo, opciones)
   if (MODO_DEMO) return blobADataUrl(blob)
   const ruta = `${new Date().getFullYear()}/${nuevoId()}.jpg`
   const { error } = await sb.storage.from(BUCKET).upload(ruta, blob, { contentType: 'image/jpeg' })

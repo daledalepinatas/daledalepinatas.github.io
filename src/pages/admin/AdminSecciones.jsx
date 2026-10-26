@@ -18,7 +18,7 @@ function CampoImagen({ valor, onCambio }) {
     if (!archivo) return
     setSubiendo(true)
     try {
-      onCambio(await subirImagen(archivo))
+      onCambio(await subirImagen(archivo, { cuadrada: false }))
     } catch (err) {
       notificar(err.message, 'error')
     } finally {

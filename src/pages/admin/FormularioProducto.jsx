@@ -132,6 +132,10 @@ function Formulario({ id }) {
             {subiendo ? 'Subiendo…' : '📷 Subir foto desde el teléfono o PC'}
             <input type="file" accept="image/*" onChange={elegirFoto} disabled={subiendo} hidden />
           </label>
+          <p className="texto-suave nota">
+            Cualquier foto sirve (vertical u horizontal): se ajusta sola a cuadrado sin recortar la piñata.
+            Para que luzca mejor: producto completo y centrado, buena luz y fondo liso.
+          </p>
           <label>
             …o pega la dirección (URL) de una imagen
             <input type="url" value={form.imagen_url.startsWith('data:') ? '' : form.imagen_url} onChange={cambiar('imagen_url')} placeholder="https://…" />
