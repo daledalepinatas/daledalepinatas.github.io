@@ -11,53 +11,66 @@ export function enlaceProducto(codigo) {
   return `${window.location.origin}${import.meta.env.BASE_URL}#/p/${encodeURIComponent(codigo)}`
 }
 
+// En WhatsApp, *texto* se ve en negritas.
+const LINEA = '━━━━━━━━━━━━━━'
+const saludo = (emoji) => `🎉 *¡Hola, ${NEGOCIO.nombreCorto}!* ${emoji}`
+const despedida = (pregunta) => [LINEA, `${pregunta} ¡Muchas gracias! 😊`]
+
 export function mensajeProducto(p) {
+  const emojiSeccion = p.categoria?.seccionInfo?.emoji || '🪅'
   return [
-    `¡Hola, ${NEGOCIO.nombreCorto}! Me interesa este producto:`,
+    saludo(emojiSeccion),
+    'Me interesa este producto:',
     '',
-    `🪅 ${p.nombre}`,
-    `🔖 Código: ${p.codigo}`,
-    `💲 Precio: ${precio(p.precio)}`,
-    `🔗 ${enlaceProducto(p.codigo)}`,
-    '',
-    '¿Está disponible?',
-  ].join('\n')
+    `${emojiSeccion} *${p.nombre}*`,
+    LINEA,
+    `🔖 *Código:* ${p.codigo}`,
+    `💰 *Precio:* ${precio(p.precio)}`,
+    p.medida ? `📏 *Tamaño:* ${p.medida}` : null,
+    p.categoria?.nombre ? `🏷️ *Categoría:* ${p.categoria.nombre}` : null,
+    `🔗 *Ver producto:* ${enlaceProducto(p.codigo)}`,
+    ...despedida(p.estado === 'agotado' ? '❓ ¿Cuándo vuelve a estar disponible?' : '✅ ¿Está disponible?'),
+  ]
+    .filter((linea) => linea !== null)
+    .join('\n')
 }
 
 export function mensajePedido(items) {
-  const lineas = items.map(
-    (i) => `• ${i.cantidad} x ${i.nombre} [${i.codigo}] — ${precio(i.precio * i.cantidad)}`,
-  )
   const total = items.reduce((s, i) => s + i.precio * i.cantidad, 0)
+  const piezas = items.reduce((s, i) => s + i.cantidad, 0)
   return [
-    `¡Hola, ${NEGOCIO.nombreCorto}! Quiero hacer este pedido:`,
+    saludo('🛍️'),
+    'Quiero hacer este pedido:',
     '',
-    ...lineas,
-    '',
-    `Total estimado: ${precio(total)}`,
-    '',
-    '¿Me confirman disponibilidad y entrega?',
+    ...items.map((i) => `🔹 *${i.cantidad} × ${i.nombre}*\n      🔖 ${i.codigo} · 💰 ${precio(i.precio * i.cantidad)}`),
+    LINEA,
+    `📦 *Piezas:* ${piezas}`,
+    `💰 *Total estimado:* ${precio(total)}`,
+    ...despedida('🚚 ¿Me confirman disponibilidad, entrega y forma de pago?'),
   ].join('\n')
-}
-
-export function urlWhatsApp(numero, mensaje) {
-  return `https://wa.me/${normalizarNumero(numero)}?text=${encodeURIComponent(mensaje)}`
 }
 
 export function mensajePersonalizada(s, tamanos) {
   const lineas = [
-    `¡Hola, ${NEGOCIO.nombreCorto}! Quiero una piñata personalizada:`,
+    saludo('🪅'),
+    'Quiero una *piñata personalizada* ✨',
     '',
-    `🔖 Folio: ${s.folio}`,
-    `🎨 Diseño: ${s.diseno}`,
-    `📏 Tamaño: ${tamanos[s.tamano]}`,
+    `🔖 *Folio:* ${s.folio}`,
+    LINEA,
+    `🎨 *Diseño:* ${s.diseno}`,
+    `📏 *Tamaño:* ${tamanos[s.tamano]}`,
   ]
   if (s.fecha_evento) {
     const fecha = new Date(`${s.fecha_evento}T12:00:00`)
-    lineas.push(`📅 La necesito para: ${fecha.toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' })}`)
+    lineas.push(`📅 *La necesito para:* ${fecha.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}`)
   }
-  if (s.detalles) lineas.push(`✨ Detalles: ${s.detalles}`)
-  if (s.con_foto) lineas.push('📷 En seguida te envío la foto de referencia por este chat.')
-  lineas.push('', '¿Me pueden cotizar?')
+  if (s.detalles) lineas.push(`📝 *Detalles:* ${s.detalles}`)
+  if (s.foto_url) lineas.push(`📷 *Foto de referencia:* ${s.foto_url}`)
+  lineas.push(...despedida('💬 ¿Me pueden cotizar?'))
   return lineas.join('\n')
+}
+
+// api.whatsapp.com en lugar de wa.me: wa.me a veces convierte los emojis en "�".
+export function urlWhatsApp(numero, mensaje) {
+  return `https://api.whatsapp.com/send?phone=${normalizarNumero(numero)}&text=${encodeURIComponent(mensaje)}`
 }

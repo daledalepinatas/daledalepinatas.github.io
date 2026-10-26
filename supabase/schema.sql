@@ -195,7 +195,7 @@ create policy "admin borra fotos" on storage.objects for delete to authenticated
 
 -- ---------- Piñatas personalizadas ----------
 -- El cliente llena el formulario y recibe un folio (PER-0001) que viaja en su mensaje de WhatsApp.
--- La foto de referencia NO se guarda aquí: el cliente la adjunta directamente en el chat.
+-- Si adjunta una foto de referencia, se sube al bucket "referencias" y su enlace va en el mensaje.
 create sequence if not exists public.consecutivo_per;
 
 create table if not exists public.personalizadas (
@@ -209,6 +209,7 @@ create table if not exists public.personalizadas (
   estado       text not null default 'nueva' check (estado in ('nueva', 'cotizada', 'aceptada', 'entregada', 'cancelada')),
   created_at   timestamptz not null default now()
 );
+alter table public.personalizadas add column if not exists foto_url text not null default '';
 
 alter table public.personalizadas enable row level security;
 
@@ -218,17 +219,37 @@ create policy "admin personalizadas" on public.personalizadas for all to authent
   using (public.es_admin()) with check (public.es_admin());
 
 -- Los visitantes crean solicitudes solo a través de esta función, que devuelve el folio.
+-- La foto solo se acepta si es del bucket "referencias" de este proyecto.
+drop function if exists public.crear_personalizada(text, text, text, date, boolean);
 create or replace function public.crear_personalizada(
-  p_diseno text, p_tamano text, p_detalles text, p_fecha_evento date, p_con_foto boolean
+  p_diseno text, p_tamano text, p_detalles text, p_fecha_evento date, p_foto_url text default ''
 ) returns text language plpgsql security definer set search_path = public as $$
 declare
   nuevo_folio text;
+  foto text := coalesce(trim(p_foto_url), '');
 begin
-  insert into public.personalizadas (diseno, tamano, detalles, fecha_evento, con_foto)
-  values (trim(p_diseno), p_tamano, coalesce(trim(p_detalles), ''), p_fecha_evento, coalesce(p_con_foto, false))
+  if foto <> '' and foto not like '%/storage/v1/object/public/referencias/%' then
+    raise exception 'Foto de referencia no válida';
+  end if;
+  insert into public.personalizadas (diseno, tamano, detalles, fecha_evento, con_foto, foto_url)
+  values (trim(p_diseno), p_tamano, coalesce(trim(p_detalles), ''), p_fecha_evento, foto <> '', foto)
   returning folio into nuevo_folio;
   return nuevo_folio;
 end $$;
 
-revoke all on function public.crear_personalizada(text, text, text, date, boolean) from public;
-grant execute on function public.crear_personalizada(text, text, text, date, boolean) to anon, authenticated;
+revoke all on function public.crear_personalizada(text, text, text, date, text) from public;
+grant execute on function public.crear_personalizada(text, text, text, date, text) to anon, authenticated;
+
+-- Fotos de referencia: cualquiera puede SUBIR (solo imágenes, máx. 3 MB) pero no listar,
+-- reemplazar ni borrar. Solo el administrador puede borrarlas.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('referencias', 'referencias', true, 3145728, array['image/jpeg', 'image/png', 'image/webp'])
+on conflict (id) do update
+  set public = true, file_size_limit = 3145728, allowed_mime_types = array['image/jpeg', 'image/png', 'image/webp'];
+
+drop policy if exists "visitantes suben referencias" on storage.objects;
+create policy "visitantes suben referencias" on storage.objects for insert to anon, authenticated
+  with check (bucket_id = 'referencias');
+drop policy if exists "admin borra referencias" on storage.objects;
+create policy "admin borra referencias" on storage.objects for delete to authenticated
+  using (bucket_id = 'referencias' and public.es_admin());

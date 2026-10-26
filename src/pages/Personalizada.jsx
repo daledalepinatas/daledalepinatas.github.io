@@ -37,24 +37,18 @@ export default function Personalizada() {
     if (!ajustes.whatsapp) return setError('La tienda aún no tiene WhatsApp configurado. Inténtalo más tarde.')
     setEnviando(true)
     try {
-      const datos = { ...form, con_foto: !!foto }
-      const folio = await crearPersonalizada(datos)
-      setEnviada({ ...datos, folio })
+      const { folio, foto_url } = await crearPersonalizada({ ...form, foto: foto?.archivo })
+      const solicitud = { ...form, folio, foto_url }
+      setEnviada(solicitud)
       window.scrollTo(0, 0)
+      // Intenta abrir WhatsApp de inmediato; si el navegador lo bloquea, queda el botón verde.
+      window.open(urlWhatsApp(ajustes.whatsapp, mensajePersonalizada(solicitud, TAMANOS)), '_blank', 'noopener')
     } catch (err) {
       setError(err.message)
     } finally {
       setEnviando(false)
     }
   }
-
-  const compartirFoto = async () => {
-    try {
-      await navigator.share({ files: [foto.archivo], text: `Foto de referencia — folio ${enviada.folio}` })
-    } catch { /* el usuario canceló */ }
-  }
-
-  const puedeCompartirFoto = foto && navigator.canShare?.({ files: [foto.archivo] })
 
   if (!cargando && !personalizadaVisible && !enviada) {
     return (
@@ -78,25 +72,18 @@ export default function Personalizada() {
           <h2>¡Tu solicitud está lista!</h2>
           <p>Tu folio es</p>
           <p className="folio">{enviada.folio}</p>
-          <ol className="pasos-envio">
-            <li>
-              <span>Envíanos el mensaje por WhatsApp (ya lleva tu folio y lo que pediste).</span>
-              <a className="btn btn-whatsapp" href={urlWhatsApp(ajustes.whatsapp, mensajePersonalizada(enviada, TAMANOS))} target="_blank" rel="noreferrer">
-                💬 Abrir WhatsApp
-              </a>
-            </li>
-            {foto && (
-              <li>
-                <span>
-                  En el mismo chat, <b>adjunta tu foto de referencia</b> con el clip 📎 o la cámara.
-                </span>
-                <img src={foto.url} alt="Tu foto de referencia" className="foto-referencia" />
-                {puedeCompartirFoto && (
-                  <button className="btn btn-claro" onClick={compartirFoto}>📤 Compartir la foto</button>
-                )}
-              </li>
-            )}
-          </ol>
+          {foto && (
+            <p className="foto-enviada">
+              <img src={foto.url} alt="Tu foto de referencia" className="foto-referencia" />
+              <span>📷 Tu foto ya va incluida en el mensaje.</span>
+            </p>
+          )}
+          <p className="paso-final">
+            👉 <b>Último paso:</b> envía el mensaje que se abrió en WhatsApp. Si no se abrió, toca aquí:
+          </p>
+          <a className="btn btn-whatsapp btn-grande" href={urlWhatsApp(ajustes.whatsapp, mensajePersonalizada(enviada, TAMANOS))} target="_blank" rel="noreferrer">
+            💬 Enviar por WhatsApp
+          </a>
           <div className="acciones">
             <button className="btn btn-claro" onClick={() => { setEnviada(null); setForm(VACIO); setFoto(null) }}>
               Pedir otra piñata personalizada
@@ -139,7 +126,7 @@ export default function Personalizada() {
                 {foto && (
                   <button type="button" className="btn btn-mini btn-claro" onClick={() => setFoto(null)}>Quitar</button>
                 )}
-                <p className="texto-suave nota">La foto la adjuntas en el chat de WhatsApp al enviar tu solicitud.</p>
+                <p className="texto-suave nota">Se enviará junto con tu mensaje de WhatsApp.</p>
               </div>
             </div>
           </div>
@@ -173,7 +160,7 @@ export default function Personalizada() {
 
           {error && <p className="error" role="alert">{error}</p>}
           <button className="btn btn-whatsapp" disabled={enviando}>
-            {enviando ? 'Preparando…' : '💬 Pedir cotización por WhatsApp'}
+            {enviando ? (foto ? 'Subiendo tu foto…' : 'Preparando…') : '💬 Pedir cotización por WhatsApp'}
           </button>
         </form>
       )}

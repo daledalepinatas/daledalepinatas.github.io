@@ -249,33 +249,48 @@ export async function guardarAjustes(ajustes) {
 }
 
 // ---------- Piñatas personalizadas ----------
-// Devuelve el folio (PER-0001) que el cliente manda por WhatsApp.
+const BUCKET_REFERENCIAS = 'referencias'
+
+// Sube la foto de referencia (si hay) y registra la solicitud. Devuelve { folio, foto_url }.
 export async function crearPersonalizada(solicitud) {
   const datos = {
     diseno: solicitud.diseno.trim(),
     tamano: solicitud.tamano,
     detalles: solicitud.detalles?.trim() || '',
     fecha_evento: solicitud.fecha_evento || null,
-    con_foto: !!solicitud.con_foto,
+  }
+  let foto_url = ''
+  if (solicitud.foto) {
+    const blob = await redimensionarImagen(solicitud.foto, { cuadrada: false, lado: 1280 })
+    if (MODO_DEMO) {
+      foto_url = await blobADataUrl(blob)
+    } else {
+      const ruta = `${new Date().toISOString().slice(0, 7)}/${nuevoId()}.jpg`
+      const { error } = await sb.storage.from(BUCKET_REFERENCIAS).upload(ruta, blob, { contentType: 'image/jpeg' })
+      falla(error)
+      foto_url = sb.storage.from(BUCKET_REFERENCIAS).getPublicUrl(ruta).data.publicUrl
+    }
   }
   if (MODO_DEMO) {
     const estado = leerDemo()
     estado.personalizadas ??= []
     estado.consecutivos.PER = (estado.consecutivos.PER || 0) + 1 // folios propios, aparte de las secciones
     const folio = `PER-${String(estado.consecutivos.PER).padStart(4, '0')}`
-    estado.personalizadas.unshift({ id: nuevoId(), folio, estado: 'nueva', created_at: new Date().toISOString(), ...datos })
+    estado.personalizadas.unshift({
+      id: nuevoId(), folio, estado: 'nueva', created_at: new Date().toISOString(), con_foto: !!foto_url, foto_url, ...datos,
+    })
     escribirDemo(estado)
-    return folio
+    return { folio, foto_url: foto_url && 'foto-en-modo-demo' }
   }
   const { data, error } = await sb.rpc('crear_personalizada', {
     p_diseno: datos.diseno,
     p_tamano: datos.tamano,
     p_detalles: datos.detalles,
     p_fecha_evento: datos.fecha_evento,
-    p_con_foto: datos.con_foto,
+    p_foto_url: foto_url,
   })
   falla(error)
-  return data
+  return { folio: data, foto_url }
 }
 
 export async function listarPersonalizadas() {
@@ -295,14 +310,15 @@ export async function cambiarEstadoPersonalizada(id, nuevoEstado) {
   falla((await sb.from('personalizadas').update({ estado: nuevoEstado }).eq('id', id)).error)
 }
 
-export async function eliminarPersonalizada(id) {
+export async function eliminarPersonalizada(solicitud) {
   if (MODO_DEMO) {
     const estado = leerDemo()
-    estado.personalizadas = (estado.personalizadas || []).filter((s) => s.id !== id)
+    estado.personalizadas = (estado.personalizadas || []).filter((s) => s.id !== solicitud.id)
     escribirDemo(estado)
     return
   }
-  falla((await sb.from('personalizadas').delete().eq('id', id)).error)
+  falla((await sb.from('personalizadas').delete().eq('id', solicitud.id)).error)
+  await borrarImagenPropia(solicitud.foto_url, BUCKET_REFERENCIAS)
 }
 
 // ---------- Imágenes ----------
@@ -316,10 +332,10 @@ export async function subirImagen(archivo, opciones) {
   return sb.storage.from(BUCKET).getPublicUrl(ruta).data.publicUrl
 }
 
-async function borrarImagenPropia(url) {
-  const marca = `/storage/v1/object/public/${BUCKET}/`
+async function borrarImagenPropia(url, bucket = BUCKET) {
+  const marca = `/storage/v1/object/public/${bucket}/`
   if (!url || !url.includes(marca)) return
-  await sb.storage.from(BUCKET).remove([url.split(marca)[1]])
+  await sb.storage.from(bucket).remove([url.split(marca)[1]])
 }
 
 // ---------- Sesión del administrador ----------

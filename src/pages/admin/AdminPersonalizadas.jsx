@@ -53,7 +53,7 @@ export default function AdminPersonalizadas() {
   const borrar = async (s) => {
     if (!confirm(`¿Eliminar la solicitud ${s.folio}?`)) return
     try {
-      await eliminarPersonalizada(s.id)
+      await eliminarPersonalizada(s)
       await cargar()
       notificar('Solicitud eliminada')
     } catch (e) {
@@ -67,7 +67,7 @@ export default function AdminPersonalizadas() {
     <section>
       <p className="texto-suave">
         Cuando un cliente pide una piñata personalizada recibe un <b>folio</b> (ej. PER-0001) que aparece en su mensaje
-        de WhatsApp. Búscalo aquí para ver lo que pidió. La foto de referencia te llega en el chat.
+        de WhatsApp. Búscalo aquí para ver lo que pidió. Si el cliente adjuntó una foto de referencia, aparece aquí y también en su mensaje de WhatsApp.
       </p>
       <div className="admin-barra">
         <input
@@ -105,9 +105,15 @@ export default function AdminPersonalizadas() {
               <p className="solicitud-datos">
                 <span><b>📏</b> {TAMANOS[s.tamano]}</span>
                 {s.fecha_evento && <span><b>📅</b> Para el {fechaCorta(s.fecha_evento)}</span>}
-                <span>{s.con_foto ? '📷 Enviará foto por WhatsApp' : 'Sin foto de referencia'}</span>
+                {!s.foto_url && <span>{s.con_foto ? '📷 Enviará foto por WhatsApp' : 'Sin foto de referencia'}</span>}
               </p>
               {s.detalles && <p><b>✨ Detalles:</b> {s.detalles}</p>}
+              {s.foto_url && (
+                <a href={s.foto_url} target="_blank" rel="noreferrer" className="solicitud-foto" title="Ver foto de referencia completa">
+                  <img src={s.foto_url} alt={`Foto de referencia de ${s.folio}`} loading="lazy" />
+                  <span>📷 Foto de referencia</span>
+                </a>
+              )}
             </li>
           ))}
         </ul>
