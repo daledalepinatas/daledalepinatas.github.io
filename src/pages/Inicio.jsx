@@ -100,9 +100,9 @@ export default function Inicio() {
       <section className="contenedor seccion">
         <h2>¿Cómo pedir?</h2>
         <ol className="pasos">
-          <li><b>1</b><span>Elige tu piñata o tus dulces y agrégalos a tu pedido.</span></li>
-          <li><b>2</b><span>Toca <em>“Pedir por WhatsApp”</em>: el mensaje ya lleva el <strong>código</strong> de cada producto.</span></li>
-          <li><b>3</b><span>Te confirmamos disponibilidad, entrega y forma de pago por WhatsApp.</span></li>
+          <li><b>1</b><span>Elige tu piñata o tus dulces y agrégalos al carrito 🛒.</span></li>
+          <li><b>2</b><span>Toca <em>“Pedir por WhatsApp”</em>: tu mensaje lleva un <strong>folio</strong> (ej. PED-0001) con todo lo que pediste.</span></li>
+          <li><b>3</b><span>Te confirmamos por WhatsApp y puedes <Link to="/seguimiento">consultar cómo va tu pedido</Link> con tu folio.</span></li>
         </ol>
       </section>
     </>

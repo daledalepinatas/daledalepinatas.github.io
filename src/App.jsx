@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import Encabezado from './components/Encabezado'
 import PiePagina from './components/PiePagina'
 import Notificacion from './components/Notificacion'
@@ -9,6 +9,7 @@ import Catalogo from './pages/Catalogo'
 import Producto from './pages/Producto'
 import Pedido from './pages/Pedido'
 import Personalizada from './pages/Personalizada'
+import Seguimiento from './pages/Seguimiento'
 import NoEncontrado from './pages/NoEncontrado'
 import Admin from './pages/admin/Admin'
 
@@ -28,7 +29,10 @@ export default function App() {
           <Route path="/" element={<Inicio />} />
           <Route path="/p/:codigo" element={<Producto />} />
           <Route path="/personalizada" element={<Personalizada />} />
-          <Route path="/pedido" element={<Pedido />} />
+          <Route path="/carrito" element={<Pedido />} />
+          <Route path="/pedido" element={<Navigate to="/carrito" replace />} />
+          <Route path="/seguimiento" element={<Seguimiento />} />
+          <Route path="/seguimiento/:folio" element={<Seguimiento />} />
           <Route path="/admin/*" element={<Admin />} />
           {/* Secciones creadas desde el panel: /pinatas, /dulceria, /globos… */}
           <Route path="/:seccion" element={<Catalogo />} />

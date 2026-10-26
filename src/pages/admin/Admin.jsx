@@ -1,4 +1,4 @@
-import { NavLink, Route, Routes } from 'react-router-dom'
+import { Navigate, NavLink, Route, Routes } from 'react-router-dom'
 import { useTienda } from '../../context/Tienda'
 import { cerrarSesion, MODO_DEMO, reiniciarDemo } from '../../lib/api'
 import Login from './Login'
@@ -6,7 +6,7 @@ import AdminProductos from './AdminProductos'
 import FormularioProducto from './FormularioProducto'
 import AdminCategorias from './AdminCategorias'
 import AdminAjustes from './AdminAjustes'
-import AdminPersonalizadas from './AdminPersonalizadas'
+import AdminPedidos from './AdminPedidos'
 import AdminSecciones from './AdminSecciones'
 
 export default function Admin() {
@@ -55,7 +55,7 @@ export default function Admin() {
       </div>
       <nav className="pestanas">
         <NavLink to="/admin" end>🪅 Productos</NavLink>
-        <NavLink to="/admin/personalizadas">✨ Personalizadas</NavLink>
+        <NavLink to="/admin/pedidos">📋 Pedidos</NavLink>
         <NavLink to="/admin/secciones">🧭 Secciones</NavLink>
         <NavLink to="/admin/categorias">🗂️ Categorías</NavLink>
         <NavLink to="/admin/ajustes">💬 WhatsApp y ajustes</NavLink>
@@ -64,7 +64,8 @@ export default function Admin() {
         <Route index element={<AdminProductos />} />
         <Route path="nuevo" element={<FormularioProducto />} />
         <Route path="editar/:id" element={<FormularioProducto />} />
-        <Route path="personalizadas" element={<AdminPersonalizadas />} />
+        <Route path="pedidos" element={<AdminPedidos />} />
+        <Route path="personalizadas" element={<Navigate to="/admin/pedidos" replace />} />
         <Route path="secciones" element={<AdminSecciones />} />
         <Route path="categorias" element={<AdminCategorias />} />
         <Route path="ajustes" element={<AdminAjustes />} />

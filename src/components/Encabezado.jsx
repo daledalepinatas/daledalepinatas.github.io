@@ -42,8 +42,8 @@ export default function Encabezado() {
             <NavLink key={s.id} to={`/${s.id}`}>{s.emoji} {s.nombre}</NavLink>
           ))}
           {personalizadaVisible && <NavLink to="/personalizada">✨ Personalizada</NavLink>}
-          <NavLink to="/pedido" className="menu-pedido">
-            🛍️ Mi pedido {piezas > 0 && <span className="globo-numero">{piezas}</span>}
+          <NavLink to="/carrito" className="menu-pedido">
+            🛒 Carrito {piezas > 0 && <span className="globo-numero">{piezas}</span>}
           </NavLink>
           {usuario?.esAdmin && <NavLink to="/admin">⚙️ Admin</NavLink>}
         </nav>

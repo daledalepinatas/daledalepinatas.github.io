@@ -312,10 +312,10 @@ input:focus, select:focus, textarea:focus { border-color: var(--morado); outline
 .solicitudes { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
 .solicitud { background: #fff; border-radius: 14px; padding: 12px 14px; border-left: 6px solid var(--amarillo); }
 .solicitud p { margin: 6px 0 0; }
-.solicitud.estado-cotizada { border-left-color: var(--morado); }
-.solicitud.estado-aceptada { border-left-color: var(--turquesa); }
-.solicitud.estado-entregada { border-left-color: var(--verde-wa); opacity: 0.8; }
-.solicitud.estado-cancelada { border-left-color: #aaa; opacity: 0.6; }
+
+
+.solicitud.estado-entregado { border-left-color: var(--verde-wa); opacity: 0.8; }
+.solicitud.estado-cancelado { border-left-color: #aaa; opacity: 0.6; }
 .solicitud-cabecera { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .solicitud-cabecera .selector-estado { width: auto; margin-left: auto; }
 .solicitud-datos { display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--suave); }
@@ -367,3 +367,34 @@ input:focus, select:focus, textarea:focus { border-color: var(--morado); outline
 .foto-enviada { display: flex; flex-direction: column; align-items: center; gap: 6px; margin: 0; font-weight: 700; }
 .paso-final { margin: 6px 0 0; max-width: 46ch; }
 .btn-grande { font-size: 1.25rem; padding: 0.9em 1.8em; }
+
+/* ---------- Seguimiento de pedidos ---------- */
+.seguimiento { max-width: 760px; }
+.aviso-folio { margin: 0; background: var(--rosa-claro); padding: 10px 14px; border-radius: 12px; font-weight: 600; }
+.resultado-seguimiento { gap: 16px; }
+.seguimiento-cabecera { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.seguimiento-cabecera .folio { font-size: 1.5rem; }
+.estado-actual { display: flex; align-items: center; gap: 14px; margin: 0; padding: 14px 16px; border-radius: 14px; background: #e9f9f4; }
+.estado-actual span:last-child { display: flex; flex-direction: column; }
+.estado-actual b { font-family: var(--titulos); font-size: 1.4rem; }
+.estado-actual small { color: var(--suave); font-size: 0.95rem; }
+.estado-actual.estado-nuevo, .estado-actual.estado-cotizado { background: #fff3c4; }
+.estado-actual.estado-cancelado { background: #fde2e2; }
+.estado-emoji { font-size: 2.2rem; }
+.linea-tiempo { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 8px; }
+.linea-tiempo li { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; font-size: 0.85rem; font-weight: 700; color: var(--suave); }
+.linea-tiempo .punto { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #f1e9ef; font-size: 1.1rem; }
+.linea-tiempo li.hecho .punto { background: var(--turquesa); color: #fff; font-weight: 800; }
+.linea-tiempo li.actual { color: var(--rosa); }
+.linea-tiempo li.actual .punto { background: var(--rosa); box-shadow: 0 0 0 4px var(--rosa-claro); }
+.seguimiento-items { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.seguimiento-items li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--borde); }
+.seguimiento-total { border-bottom: 0 !important; font-size: 1.1rem; }
+.seguimiento-total b { color: var(--rosa); }
+.etiqueta-tipo { font-weight: 800; font-size: 0.85rem; background: var(--rosa-claro); color: var(--rosa-oscuro); padding: 2px 10px; border-radius: 999px; }
+.pedido-items-admin { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 4px; }
+.pedido-items-admin li { display: flex; justify-content: space-between; gap: 12px; }
+.solicitud-total { text-align: right; }
+.solicitud.estado-nuevo { border-left-color: var(--amarillo); }
+.solicitud.estado-cotizado { border-left-color: var(--morado); }
+.solicitud.estado-confirmado, .solicitud.estado-preparacion, .solicitud.estado-listo { border-left-color: var(--turquesa); }

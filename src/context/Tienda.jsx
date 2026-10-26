@@ -73,7 +73,7 @@ export function TiendaProvider({ children }) {
         if (existe) return actual.map((i) => (i.codigo === p.codigo ? { ...i, cantidad: i.cantidad + cantidad } : i))
         return [...actual, { codigo: p.codigo, nombre: p.nombre, precio: Number(p.precio), imagen_url: p.imagen_url, cantidad }]
       })
-      notificar(`Agregaste “${p.nombre}” a tu pedido`)
+      notificar(`Agregaste “${p.nombre}” a tu carrito 🛒`)
     }
     const cambiarCantidad = (codigo, cantidad) =>
       setPedido((actual) =>

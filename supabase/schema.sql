@@ -206,7 +206,8 @@ create table if not exists public.personalizadas (
   detalles     text not null default '' check (char_length(detalles) <= 600),
   fecha_evento date,
   con_foto     boolean not null default false,
-  estado       text not null default 'nueva' check (estado in ('nueva', 'cotizada', 'aceptada', 'entregada', 'cancelada')),
+  estado       text not null default 'nuevo'
+               check (estado in ('nuevo', 'cotizado', 'confirmado', 'preparacion', 'listo', 'entregado', 'cancelado')),
   created_at   timestamptz not null default now()
 );
 alter table public.personalizadas add column if not exists foto_url text not null default '';
@@ -253,3 +254,85 @@ create policy "visitantes suben referencias" on storage.objects for insert to an
 drop policy if exists "admin borra referencias" on storage.objects;
 create policy "admin borra referencias" on storage.objects for delete to authenticated
   using (bucket_id = 'referencias' and public.es_admin());
+
+-- ---------- Pedidos del catálogo y seguimiento ----------
+-- Cada vez que un cliente envía un pedido por WhatsApp (un producto o su carrito) se registra con un
+-- folio PED-0001 que va en el mensaje. Precios y nombres se toman de la base de datos, no del navegador.
+create sequence if not exists public.consecutivo_ped;
+
+create table if not exists public.pedidos (
+  id         uuid primary key default gen_random_uuid(),
+  folio      text not null unique default ('PED-' || lpad(nextval('public.consecutivo_ped')::text, 4, '0')),
+  tipo       text not null check (tipo in ('producto', 'carrito')),
+  items      jsonb not null,
+  total      numeric(10, 2) not null default 0,
+  estado     text not null default 'nuevo'
+             check (estado in ('nuevo', 'confirmado', 'preparacion', 'listo', 'entregado', 'cancelado')),
+  created_at timestamptz not null default now()
+);
+
+alter table public.pedidos enable row level security;
+drop policy if exists "admin pedidos" on public.pedidos;
+create policy "admin pedidos" on public.pedidos for all to authenticated
+  using (public.es_admin()) with check (public.es_admin());
+
+create or replace function public.crear_pedido(p_tipo text, p_items jsonb)
+returns text language plpgsql security definer set search_path = public as $$
+declare
+  item      jsonb;
+  prod      record;
+  cantidad  int;
+  lista     jsonb := '[]'::jsonb;
+  suma      numeric := 0;
+  nuevo     text;
+begin
+  if jsonb_typeof(p_items) <> 'array' or jsonb_array_length(p_items) = 0 or jsonb_array_length(p_items) > 30 then
+    raise exception 'Pedido vacío o demasiado grande';
+  end if;
+  for item in select * from jsonb_array_elements(p_items) loop
+    cantidad := greatest(1, least(99, coalesce((item->>'cantidad')::int, 1)));
+    select codigo, nombre, precio into prod from public.productos
+    where codigo = item->>'codigo' and estado <> 'oculto';
+    if not found then
+      raise exception 'Producto no disponible: %', item->>'codigo';
+    end if;
+    lista := lista || jsonb_build_object('codigo', prod.codigo, 'nombre', prod.nombre, 'precio', prod.precio, 'cantidad', cantidad);
+    suma := suma + prod.precio * cantidad;
+  end loop;
+  insert into public.pedidos (tipo, items, total) values (p_tipo, lista, suma) returning folio into nuevo;
+  return nuevo;
+end $$;
+
+revoke all on function public.crear_pedido(text, jsonb) from public;
+grant execute on function public.crear_pedido(text, jsonb) to anon, authenticated;
+
+-- Estados de las personalizadas alineados con los pedidos (más el paso "cotizado").
+alter table public.personalizadas drop constraint if exists personalizadas_estado_check;
+update public.personalizadas set estado = case estado
+    when 'nueva' then 'nuevo' when 'cotizada' then 'cotizado' when 'aceptada' then 'confirmado'
+    when 'entregada' then 'entregado' when 'cancelada' then 'cancelado' else estado end;
+alter table public.personalizadas alter column estado set default 'nuevo';
+alter table public.personalizadas add constraint personalizadas_estado_check
+  check (estado in ('nuevo', 'cotizado', 'confirmado', 'preparacion', 'listo', 'entregado', 'cancelado'));
+
+-- Seguimiento: con su folio, el cliente ve el estado de su pedido (sin datos personales ni fotos).
+create or replace function public.consultar_pedido(p_folio text)
+returns jsonb language plpgsql stable security definer set search_path = public as $$
+declare
+  f text := upper(trim(p_folio));
+  r jsonb;
+begin
+  if f like 'PED-%' then
+    select jsonb_build_object('folio', folio, 'tipo', tipo, 'estado', estado, 'fecha', created_at,
+                              'items', items, 'total', total)
+      into r from public.pedidos where folio = f;
+  elsif f like 'PER-%' then
+    select jsonb_build_object('folio', folio, 'tipo', 'personalizada', 'estado', estado, 'fecha', created_at,
+                              'tamano', tamano, 'fecha_evento', fecha_evento)
+      into r from public.personalizadas where folio = f;
+  end if;
+  return r;
+end $$;
+
+revoke all on function public.consultar_pedido(text) from public;
+grant execute on function public.consultar_pedido(text) to anon, authenticated;

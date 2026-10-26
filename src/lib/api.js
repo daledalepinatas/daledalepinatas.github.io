@@ -277,7 +277,7 @@ export async function crearPersonalizada(solicitud) {
     estado.consecutivos.PER = (estado.consecutivos.PER || 0) + 1 // folios propios, aparte de las secciones
     const folio = `PER-${String(estado.consecutivos.PER).padStart(4, '0')}`
     estado.personalizadas.unshift({
-      id: nuevoId(), folio, estado: 'nueva', created_at: new Date().toISOString(), con_foto: !!foto_url, foto_url, ...datos,
+      id: nuevoId(), folio, estado: 'nuevo', created_at: new Date().toISOString(), con_foto: !!foto_url, foto_url, ...datos,
     })
     escribirDemo(estado)
     return { folio, foto_url: foto_url && 'foto-en-modo-demo' }
@@ -319,6 +319,72 @@ export async function eliminarPersonalizada(solicitud) {
   }
   falla((await sb.from('personalizadas').delete().eq('id', solicitud.id)).error)
   await borrarImagenPropia(solicitud.foto_url, BUCKET_REFERENCIAS)
+}
+
+// ---------- Pedidos del catálogo y seguimiento ----------
+// Registra el pedido (un producto o el carrito) y devuelve su folio PED-0001.
+export async function crearPedido(tipo, items) {
+  const lista = items.map((i) => ({ codigo: i.codigo, cantidad: i.cantidad || 1 }))
+  if (MODO_DEMO) {
+    const estado = leerDemo()
+    const detalle = lista.map((i) => {
+      const p = estado.productos.find((x) => x.codigo === i.codigo)
+      if (!p || p.estado === 'oculto') throw new Error(`Producto no disponible: ${i.codigo}`)
+      return { codigo: p.codigo, nombre: p.nombre, precio: Number(p.precio), cantidad: i.cantidad }
+    })
+    estado.pedidos ??= []
+    estado.consecutivos.PED = (estado.consecutivos.PED || 0) + 1
+    const folio = `PED-${String(estado.consecutivos.PED).padStart(4, '0')}`
+    const total = detalle.reduce((s, i) => s + i.precio * i.cantidad, 0)
+    estado.pedidos.unshift({ id: nuevoId(), folio, tipo, items: detalle, total, estado: 'nuevo', created_at: new Date().toISOString() })
+    escribirDemo(estado)
+    return folio
+  }
+  const { data, error } = await sb.rpc('crear_pedido', { p_tipo: tipo, p_items: lista })
+  falla(error)
+  return data
+}
+
+export async function listarPedidos() {
+  if (MODO_DEMO) return leerDemo().pedidos || []
+  const { data, error } = await sb.from('pedidos').select('*').order('created_at', { ascending: false })
+  falla(error)
+  return data
+}
+
+export async function cambiarEstadoPedido(id, nuevoEstado) {
+  if (MODO_DEMO) {
+    const estado = leerDemo()
+    estado.pedidos = (estado.pedidos || []).map((p) => (p.id === id ? { ...p, estado: nuevoEstado } : p))
+    escribirDemo(estado)
+    return
+  }
+  falla((await sb.from('pedidos').update({ estado: nuevoEstado }).eq('id', id)).error)
+}
+
+export async function eliminarPedido(id) {
+  if (MODO_DEMO) {
+    const estado = leerDemo()
+    estado.pedidos = (estado.pedidos || []).filter((p) => p.id !== id)
+    escribirDemo(estado)
+    return
+  }
+  falla((await sb.from('pedidos').delete().eq('id', id)).error)
+}
+
+// Para la página "Consultar mi pedido". Devuelve null si el folio no existe.
+export async function consultarPedido(folio) {
+  const f = folio.trim().toUpperCase()
+  if (MODO_DEMO) {
+    const estado = leerDemo()
+    const p = (estado.pedidos || []).find((x) => x.folio === f)
+    if (p) return { folio: p.folio, tipo: p.tipo, estado: p.estado, fecha: p.created_at, items: p.items, total: p.total }
+    const s = (estado.personalizadas || []).find((x) => x.folio === f)
+    return s ? { folio: s.folio, tipo: 'personalizada', estado: s.estado, fecha: s.created_at, tamano: s.tamano, fecha_evento: s.fecha_evento } : null
+  }
+  const { data, error } = await sb.rpc('consultar_pedido', { p_folio: f })
+  falla(error)
+  return data
 }
 
 // ---------- Imágenes ----------

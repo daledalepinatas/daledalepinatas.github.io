@@ -5,10 +5,10 @@ export default function BotonPedido() {
   const { pedido } = useTienda()
   const { pathname } = useLocation()
   const piezas = pedido.reduce((s, i) => s + i.cantidad, 0)
-  if (!piezas || pathname === '/pedido') return null
+  if (!piezas || pathname === '/carrito') return null
   return (
-    <Link to="/pedido" className="boton-flotante" aria-label={`Ver mi pedido, ${piezas} piezas`}>
-      🛍️ <span>Mi pedido</span> <b>{piezas}</b>
+    <Link to="/carrito" className="boton-flotante" aria-label={`Ver mi carrito, ${piezas} piezas`}>
+      🛒 <span>Carrito</span> <b>{piezas}</b>
     </Link>
   )
 }

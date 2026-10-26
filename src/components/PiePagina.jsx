@@ -25,6 +25,7 @@ export default function PiePagina() {
           )}
         </div>
         <div className="pie-links">
+          <Link to="/seguimiento">📦 Consultar mi pedido</Link>
           {seccionesActivas.map((s) => <Link key={s.id} to={`/${s.id}`}>{s.nombre}</Link>)}
           <Link to="/admin">Acceso administrador</Link>
         </div>

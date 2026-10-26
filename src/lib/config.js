@@ -29,10 +29,13 @@ export const TAMANOS = {
   grande: 'Grande (90 cm en adelante)',
 }
 
-export const ESTADOS_PERSONALIZADA = {
-  nueva: 'Nueva',
-  cotizada: 'Cotizada',
-  aceptada: 'Aceptada',
-  entregada: 'Entregada',
-  cancelada: 'Cancelada',
+// Pasos de un pedido (catálogo y personalizadas). "cotizado" solo aplica a personalizadas.
+export const ESTADOS_PEDIDO = {
+  nuevo: { nombre: 'Nuevo', emoji: '🆕', cliente: 'Recibimos tu pedido. Te confirmaremos por WhatsApp.' },
+  cotizado: { nombre: 'Cotizado', emoji: '💬', cliente: 'Te enviamos la cotización por WhatsApp.', soloPersonalizada: true },
+  confirmado: { nombre: 'Confirmado', emoji: '✅', cliente: '¡Pedido confirmado! Gracias por tu compra.' },
+  preparacion: { nombre: 'En preparación', emoji: '🛠️', cliente: 'Estamos preparando tu pedido con mucho cariño.' },
+  listo: { nombre: 'Listo para entregar', emoji: '📦', cliente: '¡Tu pedido está listo!' },
+  entregado: { nombre: 'Entregado', emoji: '🎉', cliente: 'Pedido entregado. ¡Que disfrutes tu fiesta!' },
+  cancelado: { nombre: 'Cancelado', emoji: '❌', cliente: 'Este pedido fue cancelado.' },
 }

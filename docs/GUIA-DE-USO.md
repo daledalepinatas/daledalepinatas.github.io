@@ -19,7 +19,8 @@ Al final hay [preguntas frecuentes](#preguntas-frecuentes).
 | **✨ Personalizada** | Formulario: diseño que busca, foto de referencia, tamaño (Chica 50 cm · Normal 90 cm · Grande 90 cm en adelante), fecha y detalles. Le da un **folio** (`PER-0001`) y abre WhatsApp con todo escrito. |
 | **🍬 Dulcería** | Gomitas, paletas, chocolates, enchilados, bombones, bolsitas para relleno… (tú decides cuáles). |
 | **Detalle de producto** | Foto, **código**, precio, tamaño, descripción y botones *Pedir por WhatsApp*, *Agregar a mi pedido* y *Compartir enlace*. |
-| **🛍️ Mi pedido** | El cliente junta varias piñatas y dulces, ajusta cantidades y manda **un solo mensaje** con todo. |
+| **🛒 Carrito** | El cliente junta varias piñatas y dulces, ajusta cantidades y manda **un solo mensaje** con todo y su folio. |
+| **📦 Consultar mi pedido** | (Pie de página) El cliente escribe su folio y ve en qué paso va su pedido. |
 
 Cada producto tiene un **código** que nunca cambia:
 
@@ -59,14 +60,24 @@ Cada producto tiene un **código** que nunca cambia:
 - **🗑️ Eliminar:** borra el producto para siempre. Si solo se acabó, mejor márcalo *Agotado* u *Oculto*.
 - **👁️** abre el producto tal como lo ve el cliente.
 
-### Pestaña ✨ Personalizadas
+### Pestaña 📋 Pedidos (confirmación de pedidos)
 
-- Cada vez que un cliente llena el formulario de piñata personalizada, aparece aquí con su **folio**,
-  diseño, tamaño, fecha y detalles.
-- **La foto de referencia no se guarda en la web:** el cliente la adjunta en el chat de WhatsApp.
-  Busca el folio del mensaje aquí para ver el resto de su pedido.
-- Cambia el **estado** conforme avanza: Nueva → Cotizada → Aceptada → Entregada (o Cancelada).
-- **↻ Actualizar** trae las solicitudes más recientes.
+Aquí llegan **todos los pedidos**, cada uno con el mismo **folio** que trae su mensaje de WhatsApp:
+
+- `PED-0001`… pedidos del **catálogo** (botón *Pedir por WhatsApp* de un producto o el **carrito**).
+  Muestra productos, cantidades y total (con los precios de tu catálogo).
+- `PER-0001`… piñatas **personalizadas**: diseño, tamaño, fecha, detalles y **foto de referencia**.
+
+Cómo usarla:
+1. Cuando te llegue un WhatsApp, busca su folio aquí (o toca **↻ Actualizar**).
+2. Avanza el **estado** conforme atiendes el pedido:
+   🆕 Nuevo → (💬 Cotizado, solo personalizadas) → ✅ Confirmado → 🛠️ En preparación → 📦 Listo → 🎉 Entregado,
+   o ❌ Cancelado si el cliente ya no lo quiere.
+3. El cliente ve ese estado en **📦 Consultar mi pedido** escribiendo su folio.
+
+> Un pedido se registra cuando el cliente toca el botón de WhatsApp, aunque luego no envíe el mensaje.
+> Por eso existe “Confirmado”: márcalo solo cuando ya hablaron por WhatsApp. Los que nunca llegaron,
+> márcalos como Cancelados o bórralos con 🗑️.
 
 ### Pestaña 🧭 Secciones
 

@@ -27,7 +27,7 @@ export default function TarjetaProducto({ producto }) {
             className="btn btn-mini"
             disabled={agotado}
             onClick={() => agregarAlPedido(producto)}
-            aria-label={`Agregar ${producto.nombre} a mi pedido`}
+            aria-label={`Agregar ${producto.nombre} al carrito`}
           >
             + Agregar
           </button>

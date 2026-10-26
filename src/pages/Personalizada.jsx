@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useTienda } from '../context/Tienda'
 import { crearPersonalizada } from '../lib/api'
 import { PERSONALIZADA, SECCION_PERSONALIZADA, TAMANOS } from '../lib/config'
-import { mensajePersonalizada, urlWhatsApp } from '../lib/whatsapp'
+import { abrirWhatsApp, mensajePersonalizada, urlWhatsApp } from '../lib/whatsapp'
 import ChipsSeccion from '../components/ChipsSeccion'
 
 const VACIO = { diseno: '', tamano: '', fecha_evento: '', detalles: '' }
@@ -37,12 +37,14 @@ export default function Personalizada() {
     if (!ajustes.whatsapp) return setError('La tienda aún no tiene WhatsApp configurado. Inténtalo más tarde.')
     setEnviando(true)
     try {
-      const { folio, foto_url } = await crearPersonalizada({ ...form, foto: foto?.archivo })
-      const solicitud = { ...form, folio, foto_url }
+      let solicitud
+      await abrirWhatsApp(async () => {
+        const { folio, foto_url } = await crearPersonalizada({ ...form, foto: foto?.archivo })
+        solicitud = { ...form, folio, foto_url }
+        return urlWhatsApp(ajustes.whatsapp, mensajePersonalizada(solicitud, TAMANOS))
+      })
       setEnviada(solicitud)
       window.scrollTo(0, 0)
-      // Intenta abrir WhatsApp de inmediato; si el navegador lo bloquea, queda el botón verde.
-      window.open(urlWhatsApp(ajustes.whatsapp, mensajePersonalizada(solicitud, TAMANOS)), '_blank', 'noopener')
     } catch (err) {
       setError(err.message)
     } finally {
@@ -88,7 +90,7 @@ export default function Personalizada() {
             <button className="btn btn-claro" onClick={() => { setEnviada(null); setForm(VACIO); setFoto(null) }}>
               Pedir otra piñata personalizada
             </button>
-            <Link to="/" className="btn btn-claro">Ver catálogo</Link>
+            <Link to={`/seguimiento/${enviada.folio}`} className="btn btn-claro">📦 Consultar mi pedido</Link>
           </div>
         </div>
       ) : (

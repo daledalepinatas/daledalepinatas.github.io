@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useTienda } from '../context/Tienda'
 import { precio } from '../lib/formato'
-import { enlaceProducto, mensajeProducto, urlWhatsApp } from '../lib/whatsapp'
+import { abrirWhatsApp, enlaceProducto, mensajeProducto, urlWhatsApp } from '../lib/whatsapp'
+import { crearPedido } from '../lib/api'
 import Imagen from '../components/Imagen'
 import Cargando from '../components/Cargando'
 import TarjetaProducto from '../components/TarjetaProducto'
@@ -10,6 +12,24 @@ export default function Producto() {
   const { codigo } = useParams()
   const { publicos, ajustes, agregarAlPedido, notificar } = useTienda()
   const p = publicos.find((x) => x.codigo.toLowerCase() === codigo.toLowerCase())
+  const [folio, setFolio] = useState('')
+  const [enviando, setEnviando] = useState(false)
+
+  // Registra el pedido (folio PED-…) y abre WhatsApp con el mensaje.
+  const pedir = async () => {
+    setEnviando(true)
+    try {
+      await abrirWhatsApp(async () => {
+        const nuevo = await crearPedido('producto', [{ codigo: p.codigo, cantidad: 1 }])
+        setFolio(nuevo)
+        return urlWhatsApp(ajustes.whatsapp, mensajeProducto(p, nuevo))
+      })
+    } catch (e) {
+      notificar(e.message, 'error')
+    } finally {
+      setEnviando(false)
+    }
+  }
 
   const compartir = async () => {
     const url = enlaceProducto(p.codigo)
@@ -55,15 +75,24 @@ export default function Producto() {
                 {p.descripcion && <p className="detalle-descripcion">{p.descripcion}</p>}
 
                 <div className="acciones acciones-columna">
-                  {ajustes.whatsapp ? (
+                  {!ajustes.whatsapp ? (
+                    <p className="texto-suave">WhatsApp aún no configurado por el administrador.</p>
+                  ) : p.estado === 'agotado' ? (
                     <a className="btn btn-whatsapp" href={urlWhatsApp(ajustes.whatsapp, mensajeProducto(p))} target="_blank" rel="noreferrer">
-                      💬 {p.estado === 'agotado' ? 'Preguntar por WhatsApp' : 'Pedir por WhatsApp'}
+                      💬 Preguntar por WhatsApp
                     </a>
                   ) : (
-                    <p className="texto-suave">WhatsApp aún no configurado por el administrador.</p>
+                    <button className="btn btn-whatsapp" onClick={pedir} disabled={enviando}>
+                      💬 {enviando ? 'Abriendo WhatsApp…' : 'Pedir por WhatsApp'}
+                    </button>
+                  )}
+                  {folio && (
+                    <p className="aviso-folio">
+                      🧾 Tu folio es <b>{folio}</b>. <Link to={`/seguimiento/${folio}`}>Consulta cómo va tu pedido</Link>.
+                    </p>
                   )}
                   <button className="btn btn-primario" disabled={p.estado === 'agotado'} onClick={() => agregarAlPedido(p)}>
-                    🛍️ Agregar a mi pedido
+                    🛒 Agregar al carrito
                   </button>
                   <button className="btn btn-claro" onClick={compartir}>🔗 Compartir enlace</button>
                 </div>
